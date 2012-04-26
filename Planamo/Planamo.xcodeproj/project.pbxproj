@@ -1,0 +1,449 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		690A0B3415491171000EC58F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A0B3315491171000EC58F /* UIKit.framework */; };
+		690A0B3615491171000EC58F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A0B3515491171000EC58F /* Foundation.framework */; };
+		690A0B3815491171000EC58F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A0B3715491171000EC58F /* CoreGraphics.framework */; };
+		690A0B3E15491171000EC58F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 690A0B3C15491171000EC58F /* InfoPlist.strings */; };
+		690A0B4015491171000EC58F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 690A0B3F15491171000EC58F /* main.m */; };
+		690A0B4415491171000EC58F /* PlanamoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 690A0B4315491171000EC58F /* PlanamoAppDelegate.m */; };
+		690A0B4715491171000EC58F /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 690A0B4515491171000EC58F /* MainStoryboard.storyboard */; };
+		690A0B4A15491171000EC58F /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690A0B4915491171000EC58F /* RootViewController.m */; };
+		690A0B5215491171000EC58F /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A0B5115491171000EC58F /* SenTestingKit.framework */; };
+		690A0B5315491171000EC58F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A0B3315491171000EC58F /* UIKit.framework */; };
+		690A0B5415491171000EC58F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A0B3515491171000EC58F /* Foundation.framework */; };
+		690A0B5C15491171000EC58F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 690A0B5A15491171000EC58F /* InfoPlist.strings */; };
+		690A0B5F15491171000EC58F /* PlanamoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 690A0B5E15491171000EC58F /* PlanamoTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		690A0B5515491171000EC58F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 690A0B2615491171000EC58F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 690A0B2E15491171000EC58F;
+			remoteInfo = Planamo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		690A0B2F15491171000EC58F /* Planamo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planamo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		690A0B3315491171000EC58F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		690A0B3515491171000EC58F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		690A0B3715491171000EC58F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		690A0B3B15491171000EC58F /* Planamo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Planamo-Info.plist"; sourceTree = "<group>"; };
+		690A0B3D15491171000EC58F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		690A0B3F15491171000EC58F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		690A0B4115491171000EC58F /* Planamo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Planamo-Prefix.pch"; sourceTree = "<group>"; };
+		690A0B4215491171000EC58F /* PlanamoAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlanamoAppDelegate.h; sourceTree = "<group>"; };
+		690A0B4315491171000EC58F /* PlanamoAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlanamoAppDelegate.m; sourceTree = "<group>"; };
+		690A0B4615491171000EC58F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		690A0B4815491171000EC58F /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		690A0B4915491171000EC58F /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		690A0B5015491171000EC58F /* PlanamoTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlanamoTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		690A0B5115491171000EC58F /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		690A0B5915491171000EC58F /* PlanamoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlanamoTests-Info.plist"; sourceTree = "<group>"; };
+		690A0B5B15491171000EC58F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		690A0B5D15491171000EC58F /* PlanamoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlanamoTests.h; sourceTree = "<group>"; };
+		690A0B5E15491171000EC58F /* PlanamoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlanamoTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		690A0B2C15491171000EC58F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690A0B3415491171000EC58F /* UIKit.framework in Frameworks */,
+				690A0B3615491171000EC58F /* Foundation.framework in Frameworks */,
+				690A0B3815491171000EC58F /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		690A0B4C15491171000EC58F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690A0B5215491171000EC58F /* SenTestingKit.framework in Frameworks */,
+				690A0B5315491171000EC58F /* UIKit.framework in Frameworks */,
+				690A0B5415491171000EC58F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		690A0B2415491171000EC58F = {
+			isa = PBXGroup;
+			children = (
+				690A0B3915491171000EC58F /* Planamo */,
+				690A0B5715491171000EC58F /* PlanamoTests */,
+				690A0B3215491171000EC58F /* Frameworks */,
+				690A0B3015491171000EC58F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		690A0B3015491171000EC58F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				690A0B2F15491171000EC58F /* Planamo.app */,
+				690A0B5015491171000EC58F /* PlanamoTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		690A0B3215491171000EC58F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				690A0B3315491171000EC58F /* UIKit.framework */,
+				690A0B3515491171000EC58F /* Foundation.framework */,
+				690A0B3715491171000EC58F /* CoreGraphics.framework */,
+				690A0B5115491171000EC58F /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		690A0B3915491171000EC58F /* Planamo */ = {
+			isa = PBXGroup;
+			children = (
+				690A0B4215491171000EC58F /* PlanamoAppDelegate.h */,
+				690A0B4315491171000EC58F /* PlanamoAppDelegate.m */,
+				690A0B4515491171000EC58F /* MainStoryboard.storyboard */,
+				690A0B4815491171000EC58F /* RootViewController.h */,
+				690A0B4915491171000EC58F /* RootViewController.m */,
+				690A0B3A15491171000EC58F /* Supporting Files */,
+			);
+			path = Planamo;
+			sourceTree = "<group>";
+		};
+		690A0B3A15491171000EC58F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				690A0B3B15491171000EC58F /* Planamo-Info.plist */,
+				690A0B3C15491171000EC58F /* InfoPlist.strings */,
+				690A0B3F15491171000EC58F /* main.m */,
+				690A0B4115491171000EC58F /* Planamo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		690A0B5715491171000EC58F /* PlanamoTests */ = {
+			isa = PBXGroup;
+			children = (
+				690A0B5D15491171000EC58F /* PlanamoTests.h */,
+				690A0B5E15491171000EC58F /* PlanamoTests.m */,
+				690A0B5815491171000EC58F /* Supporting Files */,
+			);
+			path = PlanamoTests;
+			sourceTree = "<group>";
+		};
+		690A0B5815491171000EC58F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				690A0B5915491171000EC58F /* PlanamoTests-Info.plist */,
+				690A0B5A15491171000EC58F /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		690A0B2E15491171000EC58F /* Planamo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 690A0B6215491171000EC58F /* Build configuration list for PBXNativeTarget "Planamo" */;
+			buildPhases = (
+				690A0B2B15491171000EC58F /* Sources */,
+				690A0B2C15491171000EC58F /* Frameworks */,
+				690A0B2D15491171000EC58F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Planamo;
+			productName = Planamo;
+			productReference = 690A0B2F15491171000EC58F /* Planamo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		690A0B4F15491171000EC58F /* PlanamoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 690A0B6515491171000EC58F /* Build configuration list for PBXNativeTarget "PlanamoTests" */;
+			buildPhases = (
+				690A0B4B15491171000EC58F /* Sources */,
+				690A0B4C15491171000EC58F /* Frameworks */,
+				690A0B4D15491171000EC58F /* Resources */,
+				690A0B4E15491171000EC58F /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				690A0B5615491171000EC58F /* PBXTargetDependency */,
+			);
+			name = PlanamoTests;
+			productName = PlanamoTests;
+			productReference = 690A0B5015491171000EC58F /* PlanamoTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		690A0B2615491171000EC58F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Planamo;
+			};
+			buildConfigurationList = 690A0B2915491171000EC58F /* Build configuration list for PBXProject "Planamo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 690A0B2415491171000EC58F;
+			productRefGroup = 690A0B3015491171000EC58F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				690A0B2E15491171000EC58F /* Planamo */,
+				690A0B4F15491171000EC58F /* PlanamoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		690A0B2D15491171000EC58F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690A0B3E15491171000EC58F /* InfoPlist.strings in Resources */,
+				690A0B4715491171000EC58F /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		690A0B4D15491171000EC58F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690A0B5C15491171000EC58F /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		690A0B4E15491171000EC58F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		690A0B2B15491171000EC58F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690A0B4015491171000EC58F /* main.m in Sources */,
+				690A0B4415491171000EC58F /* PlanamoAppDelegate.m in Sources */,
+				690A0B4A15491171000EC58F /* RootViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		690A0B4B15491171000EC58F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				690A0B5F15491171000EC58F /* PlanamoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		690A0B5615491171000EC58F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 690A0B2E15491171000EC58F /* Planamo */;
+			targetProxy = 690A0B5515491171000EC58F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		690A0B3C15491171000EC58F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				690A0B3D15491171000EC58F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		690A0B4515491171000EC58F /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				690A0B4615491171000EC58F /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+		690A0B5A15491171000EC58F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				690A0B5B15491171000EC58F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		690A0B6015491171000EC58F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		690A0B6115491171000EC58F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		690A0B6315491171000EC58F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Planamo/Planamo-Prefix.pch";
+				INFOPLIST_FILE = "Planamo/Planamo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos5.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		690A0B6415491171000EC58F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Planamo/Planamo-Prefix.pch";
+				INFOPLIST_FILE = "Planamo/Planamo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos5.0;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		690A0B6615491171000EC58F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Planamo.app/Planamo";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Planamo/Planamo-Prefix.pch";
+				INFOPLIST_FILE = "PlanamoTests/PlanamoTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		690A0B6715491171000EC58F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Planamo.app/Planamo";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Planamo/Planamo-Prefix.pch";
+				INFOPLIST_FILE = "PlanamoTests/PlanamoTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		690A0B2915491171000EC58F /* Build configuration list for PBXProject "Planamo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				690A0B6015491171000EC58F /* Debug */,
+				690A0B6115491171000EC58F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		690A0B6215491171000EC58F /* Build configuration list for PBXNativeTarget "Planamo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				690A0B6315491171000EC58F /* Debug */,
+				690A0B6415491171000EC58F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		690A0B6515491171000EC58F /* Build configuration list for PBXNativeTarget "PlanamoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				690A0B6615491171000EC58F /* Debug */,
+				690A0B6715491171000EC58F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 690A0B2615491171000EC58F /* Project object */;
+}

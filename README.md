@@ -1,6 +1,4 @@
-Planamo-iOS
+Planamo iOS App
 ===========
-
-This is the Planamo iOS application.
 
 Version 1.0 - only able to create contacts
