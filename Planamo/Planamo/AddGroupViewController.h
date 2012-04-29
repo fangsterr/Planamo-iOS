@@ -8,6 +8,24 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddGroupViewController : UIViewController
+#import "ContactsTokenField.h"
+
+@class AddGroupViewController;
+
+@protocol AddGroupViewControllerDelegate
+- (void)addGroupViewControllerDidCancel:(AddGroupViewController *)controller;
+- (void)addGroupViewControllerDidFinish:(AddGroupViewController *)controller;
+@end
+
+@interface AddGroupViewController : UIViewController <UITextFieldDelegate, ContactsTokenFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet id <AddGroupViewControllerDelegate> delegate;
+@property (strong, nonatomic) IBOutlet UITextField *groupNameTextField;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) IBOutlet UIView *contactsView;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+
+- (IBAction)done:(id)sender;
+- (IBAction)cancel:(id)sender;
 
 @end

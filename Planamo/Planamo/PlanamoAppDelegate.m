@@ -3,12 +3,12 @@
 //  Planamo
 //
 //  Created by Stanley Tang on 26/04/2012.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
 #import "PlanamoAppDelegate.h"
 
-#import "PlanamoMainViewController.h"
+#import "GroupsListTableViewController.h"
 
 @implementation PlanamoAppDelegate
 
@@ -20,8 +20,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    PlanamoMainViewController *controller = (PlanamoMainViewController *)self.window.rootViewController;
-    controller.managedObjectContext = self.managedObjectContext;
+   // PlanamoMainViewController *controller = (PlanamoMainViewController *)self.window.rootViewController;
+    //controller.managedObjectContext = self.managedObjectContext;
+    
+    UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
+    GroupsListTableViewController *groupsController = (GroupsListTableViewController *)navController.topViewController;
+    groupsController.managedObjectContext = self.managedObjectContext;
+    
     return YES;
 }
 							

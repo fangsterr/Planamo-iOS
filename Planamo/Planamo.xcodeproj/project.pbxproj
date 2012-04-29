@@ -16,14 +16,26 @@
 		69233AAB1549DDE400243C16 /* PlanamoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233AAA1549DDE400243C16 /* PlanamoAppDelegate.m */; };
 		69233AAE1549DDE400243C16 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69233AAC1549DDE400243C16 /* MainStoryboard.storyboard */; };
 		69233AB11549DDE400243C16 /* Planamo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 69233AAF1549DDE400243C16 /* Planamo.xcdatamodeld */; };
-		69233AB41549DDE400243C16 /* PlanamoMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233AB31549DDE400243C16 /* PlanamoMainViewController.m */; };
-		69233AB71549DDE400243C16 /* PlanamoFlipsideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233AB61549DDE400243C16 /* PlanamoFlipsideViewController.m */; };
 		69233ABF1549DDE500243C16 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233ABE1549DDE500243C16 /* SenTestingKit.framework */; };
 		69233AC01549DDE500243C16 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233A981549DDE400243C16 /* UIKit.framework */; };
 		69233AC11549DDE500243C16 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233A9A1549DDE400243C16 /* Foundation.framework */; };
 		69233AC21549DDE500243C16 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233A9E1549DDE400243C16 /* CoreData.framework */; };
 		69233ACA1549DDE500243C16 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69233AC81549DDE500243C16 /* InfoPlist.strings */; };
 		69233ACD1549DDE500243C16 /* PlanamoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233ACC1549DDE500243C16 /* PlanamoTests.m */; };
+		69233AEB1549E49B00243C16 /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233AEA1549E49B00243C16 /* CoreDataTableViewController.m */; };
+		69233AF6154A30B000243C16 /* GroupsListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233AF5154A30B000243C16 /* GroupsListTableViewController.m */; };
+		69233B02154A508800243C16 /* AddGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69233B01154A508700243C16 /* AddGroupViewController.m */; };
+		6928A9CE154A894F00D42A7A /* ContactsTokenField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6928A9CD154A894F00D42A7A /* ContactsTokenField.m */; };
+		6928A9D1154A89D800D42A7A /* AddContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6928A9D0154A89D700D42A7A /* AddContactsViewController.m */; };
+		6935A61A154B5E990083367B /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6935A618154B5E7B0083367B /* AddressBook.framework */; };
+		6935A61B154B5E9B0083367B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6928A9D5154A958500D42A7A /* QuartzCore.framework */; };
+		6951D21C154D37840080B33C /* GroupUsersListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6951D21B154D37840080B33C /* GroupUsersListTableViewController.m */; };
+		69D0F2B8154B6B100023E959 /* AddressBookScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D0F2B7154B6B100023E959 /* AddressBookScanner.m */; };
+		69E05558154D2EE500B59241 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E05557154D2EE500B59241 /* Contact.m */; };
+		69E0555B154D2EE500B59241 /* PhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E0555A154D2EE500B59241 /* PhoneNumber.m */; };
+		69E0555E154D2EE500B59241 /* PlanamoUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E0555D154D2EE500B59241 /* PlanamoUser.m */; };
+		69E05561154D2EE500B59241 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E05560154D2EE500B59241 /* Group.m */; };
+		69E05564154D2EE500B59241 /* GroupUserLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E05563154D2EE500B59241 /* GroupUserLink.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,24 +54,46 @@
 		69233A9A1549DDE400243C16 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		69233A9C1549DDE400243C16 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		69233A9E1549DDE400243C16 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		69233AA21549DDE400243C16 /* Planamo-Info.plist */ = {isa = PBXFileReference; path = "Planamo-Info.plist"; sourceTree = "<group>"; };
+		69233AA21549DDE400243C16 /* Planamo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Planamo-Info.plist"; sourceTree = "<group>"; };
 		69233AA41549DDE400243C16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		69233AA61549DDE400243C16 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		69233AA81549DDE400243C16 /* Planamo-Prefix.pch */ = {isa = PBXFileReference; path = "Planamo-Prefix.pch"; sourceTree = "<group>"; };
-		69233AA91549DDE400243C16 /* PlanamoAppDelegate.h */ = {isa = PBXFileReference; path = PlanamoAppDelegate.h; sourceTree = "<group>"; };
+		69233AA81549DDE400243C16 /* Planamo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Planamo-Prefix.pch"; sourceTree = "<group>"; };
+		69233AA91549DDE400243C16 /* PlanamoAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlanamoAppDelegate.h; sourceTree = "<group>"; };
 		69233AAA1549DDE400243C16 /* PlanamoAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlanamoAppDelegate.m; sourceTree = "<group>"; };
 		69233AAD1549DDE400243C16 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		69233AB01549DDE400243C16 /* Planamo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Planamo.xcdatamodel; sourceTree = "<group>"; };
-		69233AB21549DDE400243C16 /* PlanamoMainViewController.h */ = {isa = PBXFileReference; path = PlanamoMainViewController.h; sourceTree = "<group>"; };
-		69233AB31549DDE400243C16 /* PlanamoMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlanamoMainViewController.m; sourceTree = "<group>"; };
-		69233AB51549DDE400243C16 /* PlanamoFlipsideViewController.h */ = {isa = PBXFileReference; path = PlanamoFlipsideViewController.h; sourceTree = "<group>"; };
-		69233AB61549DDE400243C16 /* PlanamoFlipsideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlanamoFlipsideViewController.m; sourceTree = "<group>"; };
 		69233ABD1549DDE500243C16 /* PlanamoTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlanamoTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		69233ABE1549DDE500243C16 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		69233AC71549DDE500243C16 /* PlanamoTests-Info.plist */ = {isa = PBXFileReference; path = "PlanamoTests-Info.plist"; sourceTree = "<group>"; };
+		69233AC71549DDE500243C16 /* PlanamoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlanamoTests-Info.plist"; sourceTree = "<group>"; };
 		69233AC91549DDE500243C16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		69233ACB1549DDE500243C16 /* PlanamoTests.h */ = {isa = PBXFileReference; path = PlanamoTests.h; sourceTree = "<group>"; };
+		69233ACB1549DDE500243C16 /* PlanamoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlanamoTests.h; sourceTree = "<group>"; };
 		69233ACC1549DDE500243C16 /* PlanamoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlanamoTests.m; sourceTree = "<group>"; };
+		69233AE91549E49B00243C16 /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
+		69233AEA1549E49B00243C16 /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
+		69233AF4154A30B000243C16 /* GroupsListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupsListTableViewController.h; sourceTree = "<group>"; };
+		69233AF5154A30B000243C16 /* GroupsListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupsListTableViewController.m; sourceTree = "<group>"; };
+		69233B00154A508700243C16 /* AddGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGroupViewController.h; sourceTree = "<group>"; };
+		69233B01154A508700243C16 /* AddGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGroupViewController.m; sourceTree = "<group>"; };
+		6928A9CC154A894F00D42A7A /* ContactsTokenField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ContactsTokenField.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		6928A9CD154A894F00D42A7A /* ContactsTokenField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactsTokenField.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		6928A9CF154A89D700D42A7A /* AddContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddContactsViewController.h; sourceTree = "<group>"; };
+		6928A9D0154A89D700D42A7A /* AddContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AddContactsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		6928A9D5154A958500D42A7A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6935A618154B5E7B0083367B /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		6951D21A154D37840080B33C /* GroupUsersListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupUsersListTableViewController.h; sourceTree = "<group>"; };
+		6951D21B154D37840080B33C /* GroupUsersListTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupUsersListTableViewController.m; sourceTree = "<group>"; };
+		69D0F2B6154B6B100023E959 /* AddressBookScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressBookScanner.h; sourceTree = "<group>"; };
+		69D0F2B7154B6B100023E959 /* AddressBookScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressBookScanner.m; sourceTree = "<group>"; };
+		69E05556154D2EE500B59241 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contact.h; path = Models/Contact.h; sourceTree = "<group>"; };
+		69E05557154D2EE500B59241 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Contact.m; path = Models/Contact.m; sourceTree = "<group>"; };
+		69E05559154D2EE500B59241 /* PhoneNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhoneNumber.h; path = Models/PhoneNumber.h; sourceTree = "<group>"; };
+		69E0555A154D2EE500B59241 /* PhoneNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhoneNumber.m; path = Models/PhoneNumber.m; sourceTree = "<group>"; };
+		69E0555C154D2EE500B59241 /* PlanamoUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanamoUser.h; path = Models/PlanamoUser.h; sourceTree = "<group>"; };
+		69E0555D154D2EE500B59241 /* PlanamoUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlanamoUser.m; path = Models/PlanamoUser.m; sourceTree = "<group>"; };
+		69E0555F154D2EE500B59241 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Group.h; path = Models/Group.h; sourceTree = "<group>"; };
+		69E05560154D2EE500B59241 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Group.m; path = Models/Group.m; sourceTree = "<group>"; };
+		69E05562154D2EE500B59241 /* GroupUserLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GroupUserLink.h; path = Models/GroupUserLink.h; sourceTree = "<group>"; };
+		69E05563154D2EE500B59241 /* GroupUserLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GroupUserLink.m; path = Models/GroupUserLink.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +101,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6935A61A154B5E990083367B /* AddressBook.framework in Frameworks */,
+				6935A61B154B5E9B0083367B /* QuartzCore.framework in Frameworks */,
 				69233A991549DDE400243C16 /* UIKit.framework in Frameworks */,
 				69233A9B1549DDE400243C16 /* Foundation.framework in Frameworks */,
 				69233A9D1549DDE400243C16 /* CoreGraphics.framework in Frameworks */,
@@ -110,6 +146,8 @@
 		69233A971549DDE400243C16 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6935A618154B5E7B0083367B /* AddressBook.framework */,
+				6928A9D5154A958500D42A7A /* QuartzCore.framework */,
 				69233A981549DDE400243C16 /* UIKit.framework */,
 				69233A9A1549DDE400243C16 /* Foundation.framework */,
 				69233A9C1549DDE400243C16 /* CoreGraphics.framework */,
@@ -122,14 +160,11 @@
 		69233AA01549DDE400243C16 /* Planamo */ = {
 			isa = PBXGroup;
 			children = (
+				69233AAC1549DDE400243C16 /* MainStoryboard.storyboard */,
 				69233AA91549DDE400243C16 /* PlanamoAppDelegate.h */,
 				69233AAA1549DDE400243C16 /* PlanamoAppDelegate.m */,
-				69233AAC1549DDE400243C16 /* MainStoryboard.storyboard */,
-				69233AB21549DDE400243C16 /* PlanamoMainViewController.h */,
-				69233AB31549DDE400243C16 /* PlanamoMainViewController.m */,
-				69233AB51549DDE400243C16 /* PlanamoFlipsideViewController.h */,
-				69233AB61549DDE400243C16 /* PlanamoFlipsideViewController.m */,
-				69233AAF1549DDE400243C16 /* Planamo.xcdatamodeld */,
+				69233AE71549E31A00243C16 /* Models */,
+				69233AE81549E3C300243C16 /* View Controllers */,
 				69233AA11549DDE400243C16 /* Supporting Files */,
 			);
 			path = Planamo;
@@ -138,6 +173,7 @@
 		69233AA11549DDE400243C16 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				69233AFF154A4E4D00243C16 /* Core Data  */,
 				69233AA21549DDE400243C16 /* Planamo-Info.plist */,
 				69233AA31549DDE400243C16 /* InfoPlist.strings */,
 				69233AA61549DDE400243C16 /* main.m */,
@@ -163,6 +199,60 @@
 				69233AC81549DDE500243C16 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		69233AE71549E31A00243C16 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				69E05562154D2EE500B59241 /* GroupUserLink.h */,
+				69E05563154D2EE500B59241 /* GroupUserLink.m */,
+				69E0555F154D2EE500B59241 /* Group.h */,
+				69E05560154D2EE500B59241 /* Group.m */,
+				69E0555C154D2EE500B59241 /* PlanamoUser.h */,
+				69E0555D154D2EE500B59241 /* PlanamoUser.m */,
+				69E05559154D2EE500B59241 /* PhoneNumber.h */,
+				69E0555A154D2EE500B59241 /* PhoneNumber.m */,
+				69E05556154D2EE500B59241 /* Contact.h */,
+				69E05557154D2EE500B59241 /* Contact.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		69233AE81549E3C300243C16 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				69233AF4154A30B000243C16 /* GroupsListTableViewController.h */,
+				69233AF5154A30B000243C16 /* GroupsListTableViewController.m */,
+				6951D21A154D37840080B33C /* GroupUsersListTableViewController.h */,
+				6951D21B154D37840080B33C /* GroupUsersListTableViewController.m */,
+				69233B00154A508700243C16 /* AddGroupViewController.h */,
+				69233B01154A508700243C16 /* AddGroupViewController.m */,
+				6928A9D7154B3A3B00D42A7A /* Adding Contacts */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		69233AFF154A4E4D00243C16 /* Core Data  */ = {
+			isa = PBXGroup;
+			children = (
+				69233AAF1549DDE400243C16 /* Planamo.xcdatamodeld */,
+				69233AE91549E49B00243C16 /* CoreDataTableViewController.h */,
+				69233AEA1549E49B00243C16 /* CoreDataTableViewController.m */,
+			);
+			name = "Core Data ";
+			sourceTree = "<group>";
+		};
+		6928A9D7154B3A3B00D42A7A /* Adding Contacts */ = {
+			isa = PBXGroup;
+			children = (
+				6928A9CC154A894F00D42A7A /* ContactsTokenField.h */,
+				6928A9CD154A894F00D42A7A /* ContactsTokenField.m */,
+				6928A9CF154A89D700D42A7A /* AddContactsViewController.h */,
+				6928A9D0154A89D700D42A7A /* AddContactsViewController.m */,
+				69D0F2B6154B6B100023E959 /* AddressBookScanner.h */,
+				69D0F2B7154B6B100023E959 /* AddressBookScanner.m */,
+			);
+			name = "Adding Contacts";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +301,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Planamo;
 			};
 			buildConfigurationList = 69233A8E1549DDE400243C16 /* Build configuration list for PBXProject "Planamo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -274,8 +365,18 @@
 				69233AA71549DDE400243C16 /* main.m in Sources */,
 				69233AAB1549DDE400243C16 /* PlanamoAppDelegate.m in Sources */,
 				69233AB11549DDE400243C16 /* Planamo.xcdatamodeld in Sources */,
-				69233AB41549DDE400243C16 /* PlanamoMainViewController.m in Sources */,
-				69233AB71549DDE400243C16 /* PlanamoFlipsideViewController.m in Sources */,
+				69233AEB1549E49B00243C16 /* CoreDataTableViewController.m in Sources */,
+				69233AF6154A30B000243C16 /* GroupsListTableViewController.m in Sources */,
+				69233B02154A508800243C16 /* AddGroupViewController.m in Sources */,
+				6928A9CE154A894F00D42A7A /* ContactsTokenField.m in Sources */,
+				6928A9D1154A89D800D42A7A /* AddContactsViewController.m in Sources */,
+				69D0F2B8154B6B100023E959 /* AddressBookScanner.m in Sources */,
+				69E05558154D2EE500B59241 /* Contact.m in Sources */,
+				69E0555B154D2EE500B59241 /* PhoneNumber.m in Sources */,
+				69E0555E154D2EE500B59241 /* PlanamoUser.m in Sources */,
+				69E05561154D2EE500B59241 /* Group.m in Sources */,
+				69E05564154D2EE500B59241 /* GroupUserLink.m in Sources */,
+				6951D21C154D37840080B33C /* GroupUsersListTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,8 +446,8 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				SDKROOT = iphoneos;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos5.0;
 			};
 			name = Debug;
 		};
@@ -363,9 +464,9 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
+				SDKROOT = iphoneos5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -376,7 +477,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Planamo/Planamo-Prefix.pch";
 				INFOPLIST_FILE = "Planamo/Planamo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos5.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -387,7 +490,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Planamo/Planamo-Prefix.pch";
 				INFOPLIST_FILE = "Planamo/Planamo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos5.0;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -445,6 +550,7 @@
 				69233AD21549DDE500243C16 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		69233AD31549DDE500243C16 /* Build configuration list for PBXNativeTarget "PlanamoTests" */ = {
 			isa = XCConfigurationList;
@@ -453,6 +559,7 @@
 				69233AD51549DDE500243C16 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

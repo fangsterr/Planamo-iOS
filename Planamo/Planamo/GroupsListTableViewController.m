@@ -7,9 +7,11 @@
 //
 
 #import "GroupsListTableViewController.h"
-
+#import "Group.h"
 
 @implementation GroupsListTableViewController
+
+@synthesize managedObjectContext = _managedObjectContext;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -28,12 +30,26 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - Fetched results controller
+
+/**
+ Create fetch request with Groups entity. Create fetched results controller and attach to this table view controller
+ */
+- (void)setupFetchedResultsController {
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"lastUpdated" ascending:YES]];
+    
+    // Create and initialize fech results controller
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil]; //TODO - section name key path, cache name
+    self.fetchedResultsController = aFetchedResultsController;
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -51,6 +67,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self setupFetchedResultsController];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -76,23 +93,9 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"GroupsListCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -100,6 +103,9 @@
     }
     
     // Configure the cell...
+    
+    Group *group = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	cell.textLabel.text = group.name;
     
     return cell;
 }
@@ -154,6 +160,29 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+}
+
+#pragma mark - Add Group View
+
+- (void)addGroupViewControllerDidCancel:(AddGroupViewController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)addGroupViewControllerDidFinish:(AddGroupViewController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
+    //TODO - show groups list
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"showAddGroup"]) {
+        UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
+        AddGroupViewController *addGroupController = (AddGroupViewController *)navController.topViewController;
+        addGroupController.delegate = self;
+        addGroupController.managedObjectContext = self.managedObjectContext;
+    }
 }
 
 @end

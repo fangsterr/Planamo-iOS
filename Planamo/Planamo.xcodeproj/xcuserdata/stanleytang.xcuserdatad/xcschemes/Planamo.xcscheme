@@ -13,7 +13,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "690A0B2E15491171000EC58F"
+               BlueprintIdentifier = "69233A931549DDE400243C16"
                BuildableName = "Planamo.app"
                BlueprintName = "Planamo"
                ReferencedContainer = "container:Planamo.xcodeproj">
@@ -31,7 +31,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "690A0B4F15491171000EC58F"
+               BlueprintIdentifier = "69233ABC1549DDE500243C16"
                BuildableName = "PlanamoTests.octest"
                BlueprintName = "PlanamoTests"
                ReferencedContainer = "container:Planamo.xcodeproj">
@@ -41,7 +41,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "690A0B2E15491171000EC58F"
+            BlueprintIdentifier = "69233A931549DDE400243C16"
             BuildableName = "Planamo.app"
             BlueprintName = "Planamo"
             ReferencedContainer = "container:Planamo.xcodeproj">
@@ -59,7 +59,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "690A0B2E15491171000EC58F"
+            BlueprintIdentifier = "69233A931549DDE400243C16"
             BuildableName = "Planamo.app"
             BlueprintName = "Planamo"
             ReferencedContainer = "container:Planamo.xcodeproj">
@@ -77,7 +77,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "690A0B2E15491171000EC58F"
+            BlueprintIdentifier = "69233A931549DDE400243C16"
             BuildableName = "Planamo.app"
             BlueprintName = "Planamo"
             ReferencedContainer = "container:Planamo.xcodeproj">

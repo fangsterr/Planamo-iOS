@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Contact" representedClassName="Contact" syncable="YES">
+        <attribute name="addressBookID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="firstName" attributeType="String" maxValueString="100" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
+        <relationship name="phoneNumbers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PhoneNumber" inverseName="owner" inverseEntity="PhoneNumber" syncable="YES"/>
+        <relationship name="planamoUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="addressBookContact" inverseEntity="PlanamoUser" syncable="YES"/>
+    </entity>
+    <entity name="Group" representedClassName="Group" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastUpdated" attributeType="Date" syncable="YES"/>
+        <attribute name="name" attributeType="String" maxValueString="100" syncable="YES"/>
+        <attribute name="welcomeMessage" optional="YES" attributeType="String" maxValueString="500" syncable="YES"/>
+        <relationship name="users" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="group" inverseEntity="GroupUserLink" syncable="YES"/>
+    </entity>
+    <entity name="GroupUserLink" representedClassName="GroupUserLink" syncable="YES">
+        <attribute name="isOrganizer" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="users" inverseEntity="Group" syncable="YES"/>
+        <relationship name="user" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="groupsBelongedTo" inverseEntity="PlanamoUser" syncable="YES"/>
+    </entity>
+    <entity name="PhoneNumber" representedClassName="PhoneNumber" syncable="YES">
+        <attribute name="numberAsStringWithFormat" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="numberAsStringWithoutFormat" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" maxValueString="50" syncable="YES"/>
+        <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="phoneNumbers" inverseEntity="Contact" syncable="YES"/>
+    </entity>
+    <entity name="PlanamoUser" representedClassName="PlanamoUser" syncable="YES">
+        <attribute name="firstName" attributeType="String" maxValueString="100" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="isLoggedInUser" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
+        <attribute name="phoneNumber" attributeType="String" maxValueString="50" syncable="YES"/>
+        <relationship name="addressBookContact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="planamoUser" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="groupsBelongedTo" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="user" inverseEntity="GroupUserLink" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Contact" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="Group" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="GroupUserLink" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="PhoneNumber" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="PlanamoUser" positionX="160" positionY="192" width="128" height="150"/>
+    </elements>
 </model>

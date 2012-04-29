@@ -10,4 +10,7 @@
 
 @interface AddressBookScanner : NSObject
 
+// Scans address book and stores in Core Data
++ (void)scanAddressBookWithManagedContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end

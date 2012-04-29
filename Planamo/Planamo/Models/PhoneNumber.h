@@ -2,7 +2,7 @@
 //  PhoneNumber.h
 //  Planamo
 //
-//  Created by Stanley Tang on 27/04/2012.
+//  Created by Stanley Tang on 29/04/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -14,8 +14,8 @@
 @interface PhoneNumber : NSManagedObject
 
 @property (nonatomic, retain) NSString * numberAsStringWithFormat;
+@property (nonatomic, retain) NSString * numberAsStringWithoutFormat;
 @property (nonatomic, retain) NSString * type;
-@property (nonatomic, retain) NSNumber * numberAsInteger;
 @property (nonatomic, retain) Contact *owner;
 
 @end

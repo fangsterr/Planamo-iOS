@@ -7,8 +7,12 @@
 //
 
 #import "AddContactsViewController.h"
+#import "AddressBookScanner.h"
 
 @implementation AddContactsViewController
+
+@synthesize managedObjectContext = _managedObjectContext;
+@synthesize tokenField = _tokenField;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,12 +33,17 @@
 
 #pragma mark - View lifecycle
 
-/*
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView
 {
+   // self.tokenField = [[ContactsTokenField alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+    self.tokenField.managedObjectContext = self.managedObjectContext;
+    self.tokenField.labelText = @"Who:";
+    [self.tokenField becomeFirstResponder];
+    self.view = self.tokenField;
+    [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
 }
-*/
+
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
