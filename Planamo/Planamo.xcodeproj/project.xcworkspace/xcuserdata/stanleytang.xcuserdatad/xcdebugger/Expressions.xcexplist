@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "+[AddressBookScanner scanAddressBookWithManagedContext:]:AddressBookScanner.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "(__NSCFType *)((NSObject *)[thePeoples objectAtIndex:0])">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

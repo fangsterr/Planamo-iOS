@@ -1,17 +1,17 @@
 //
-//  Contact.m
+//  AddressBookContact.m
 //  Planamo
 //
-//  Created by Stanley Tang on 29/04/2012.
+//  Created by Stanley Tang on 01/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
-#import "Contact.h"
+#import "AddressBookContact.h"
 #import "PhoneNumber.h"
 #import "PlanamoUser.h"
 
 
-@implementation Contact
+@implementation AddressBookContact
 
 @dynamic addressBookID;
 @dynamic firstName;

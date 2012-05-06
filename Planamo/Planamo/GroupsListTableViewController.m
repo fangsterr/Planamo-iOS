@@ -8,6 +8,7 @@
 
 #import "GroupsListTableViewController.h"
 #import "Group.h"
+#import "EnterPhoneNumberViewController.h"
 
 @implementation GroupsListTableViewController
 
@@ -30,6 +31,27 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+/** 
+ Returns true if there is a user already logged in on the app. Otherwise false (so can show sign up process)
+ */
+- (BOOL)isAUserLoggedIn 
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"PlanamoUser"];
+    request.predicate = [NSPredicate predicateWithFormat:@"isLoggedInUser = %@", [NSNumber numberWithBool:YES]];
+    
+    NSError *error = nil;
+    NSArray *userArray = [self.managedObjectContext executeFetchRequest:request error:&error];
+    
+    if (!userArray || ([userArray count] > 1)) {
+        NSLog(@"Error feteching loggedInUser from core data");
+        return NO;
+    } else if (![userArray count]) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 #pragma mark - Fetched results controller
 
 /**
@@ -50,11 +72,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //TODO - if user not logged in
+    [self.navigationController performSegueWithIdentifier:@"signUpProcess" sender:self];
 }
 
 - (void)viewDidUnload
@@ -83,12 +102,6 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -177,11 +190,15 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showAddGroup"]) {
+    if ([[segue identifier] isEqualToString:@"addGroup"]) {
         UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
         AddGroupViewController *addGroupController = (AddGroupViewController *)navController.topViewController;
         addGroupController.delegate = self;
         addGroupController.managedObjectContext = self.managedObjectContext;
+    } else if ([[segue identifier] isEqualToString:@"signUpProcess"]) {
+        UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
+        EnterPhoneNumberViewController *phoneNumberController = (EnterPhoneNumberViewController *)navController.topViewController;
+        phoneNumberController.managedObjectContext = self.managedObjectContext;
     }
 }
 

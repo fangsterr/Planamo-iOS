@@ -10,9 +10,7 @@
 
 #import "ContactsTokenField.h"
 
-@interface AddContactsViewController : UIViewController {
-    UIView *containerView;
-}
+@interface AddContactsViewController : UIViewController
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) ContactsTokenField *tokenField;

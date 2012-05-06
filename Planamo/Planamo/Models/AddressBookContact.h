@@ -1,8 +1,8 @@
 //
-//  Contact.h
+//  AddressBookContact.h
 //  Planamo
 //
-//  Created by Stanley Tang on 29/04/2012.
+//  Created by Stanley Tang on 01/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 
 @class PhoneNumber, PlanamoUser;
 
-@interface Contact : NSManagedObject
+@interface AddressBookContact : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * addressBookID;
 @property (nonatomic, retain) NSString * firstName;
@@ -20,7 +20,7 @@
 @property (nonatomic, retain) PlanamoUser *planamoUser;
 @end
 
-@interface Contact (CoreDataGeneratedAccessors)
+@interface AddressBookContact (CoreDataGeneratedAccessors)
 
 - (void)addPhoneNumbersObject:(PhoneNumber *)value;
 - (void)removePhoneNumbersObject:(PhoneNumber *)value;

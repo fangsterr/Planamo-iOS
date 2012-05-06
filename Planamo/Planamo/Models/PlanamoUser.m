@@ -2,12 +2,12 @@
 //  PlanamoUser.m
 //  Planamo
 //
-//  Created by Stanley Tang on 29/04/2012.
+//  Created by Stanley Tang on 05/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
 #import "PlanamoUser.h"
-#import "Contact.h"
+#import "AddressBookContact.h"
 #import "GroupUserLink.h"
 
 
@@ -15,10 +15,10 @@
 
 @dynamic firstName;
 @dynamic id;
-@dynamic isLoggedInUser;
 @dynamic lastName;
 @dynamic phoneNumber;
-@dynamic groupsBelongedTo;
+@dynamic isLoggedInUser;
 @dynamic addressBookContact;
+@dynamic groupsBelongedTo;
 
 @end

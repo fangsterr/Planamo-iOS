@@ -6,7 +6,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "PhoneNumber.h"
-#import "Contact.h"
+#import "AddressBookContact.h"
 
 static NSString *const kHiddenCharacter = @"\u200B";
 
@@ -305,7 +305,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
     
     // Currently we don't support non-usa numbers - TODO
     PhoneNumber *number = (PhoneNumber *)object;
-    if (![number.numberAsStringWithoutFormat hasPrefix:@"+1"]) {
+    if (![number.numberAsStringWithoutFormat hasPrefix:@"1"]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not a valid phone number" 
                                                     message:@"Sorry! But we currently support only USA-only numbers." 
                                                    delegate:nil 
@@ -574,9 +574,6 @@ static NSString *const kHiddenCharacter = @"\u200B";
     if (cell == nil)
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     
-    //id object = [tokenFieldDataSource tokenField:self objectAtResultsIndex:indexPath];
-    //cell.textLabel.text = [tokenFieldDataSource tokenField:self titleForObject:object];
-    
     PhoneNumber *number = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", number.owner.firstName, number.owner.lastName];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", number.type, number.numberAsStringWithFormat];
@@ -610,7 +607,6 @@ static NSString *const kHiddenCharacter = @"\u200B";
     // get the object for that result row
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self addObject:object];
-    //What to add? TODO - user primary phone number
     
     [resultsTable reloadData];
     

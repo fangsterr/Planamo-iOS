@@ -7,7 +7,6 @@
 //
 
 #import "PlanamoAppDelegate.h"
-
 #import "GroupsListTableViewController.h"
 
 @implementation PlanamoAppDelegate
@@ -19,10 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-   // PlanamoMainViewController *controller = (PlanamoMainViewController *)self.window.rootViewController;
-    //controller.managedObjectContext = self.managedObjectContext;
-    
+    // Load user's groups list table view
     UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
     GroupsListTableViewController *groupsController = (GroupsListTableViewController *)navController.topViewController;
     groupsController.managedObjectContext = self.managedObjectContext;

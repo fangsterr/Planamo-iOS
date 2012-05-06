@@ -9,9 +9,10 @@
 #import "AddGroupViewController.h"
 
 #import "PhoneNumber.h"
-#import "Contact.h"
-
+#import "AddressBookContact.h"
 #import "AddContactsViewController.h"
+
+#import "ASIHTTPRequest.h"
 
 @interface AddGroupViewController ()
 
@@ -26,7 +27,6 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize contactsView = _contactsView;
 @synthesize doneButton = _doneButton;
-
 @synthesize addContactsController = _addContactsController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -84,11 +84,19 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
+            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+}
+
 #pragma mark - Actions
 
 - (IBAction)done:(id)sender
 {
     [self.delegate addGroupViewControllerDidCancel:self];
+    //TODO - add group
 }
 
 - (IBAction)cancel:(id)sender
@@ -100,26 +108,34 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showAddContacts"]) {
+    /*if ([[segue identifier] isEqualToString:@"showAddContacts"]) {
         //[[segue destinationViewController] setDelegate:self];
         [[segue destinationViewController] setManagedObjectContext:self.managedObjectContext];
-    }
+    }*/
 }
 
 #pragma mark - ContactsTokenFieldDelegate
 
+/**
+ HELPER FUNCTION. Updates done button enabled status (enabled only if there is a group name and at least one contact)
+ */
+- (void)updateDoneButtonEnabledStatus
+{
+    [self.doneButton setEnabled:[self.addContactsController.tokenField.tokens count] > 0 && [self.groupNameTextField.text length] > 0];
+}
+
 - (void)tokenField:(ContactsTokenField*)tokenField didAddObject:(id)object {
-    [self.doneButton setEnabled:[tokenField.tokens count] > 0 && [self.groupNameTextField.text length] > 0];
+    [self updateDoneButtonEnabledStatus];
 }
 
 - (void)tokenField:(ContactsTokenField*)tokenField didRemoveObject:(id)object {
-    [self.doneButton setEnabled:[tokenField.tokens count] > 0 && [self.groupNameTextField.text length] > 0];
+    [self updateDoneButtonEnabledStatus];
 }
 
 #pragma mark - Group name text field delegate
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [self.doneButton setEnabled:[self.addContactsController.tokenField.tokens count] > 0 && [self.groupNameTextField.text length] > 0];
+    [self updateDoneButtonEnabledStatus];
 }
 
 @end

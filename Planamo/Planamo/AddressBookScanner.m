@@ -9,7 +9,7 @@
 #import <AddressBook/AddressBook.h>
 
 #import "AddressBookScanner.h"
-#import "Contact.h"
+#import "AddressBookContact.h"
 #import "PhoneNumber.h"
 
 @implementation AddressBookScanner
@@ -28,16 +28,8 @@
     }
     
     // Append USA country code - TODO (if internationalized)
-    if ([newPhoneNumber characterAtIndex:0] == '+') {
-        //ignore  
-    } else if ([newPhoneNumber characterAtIndex:0] == '1' &&
-               [newPhoneNumber length] == 11) {
-        [newPhoneNumber insertString:@"+" atIndex:0];
-    } else if ([newPhoneNumber length] == 10) {
-        [newPhoneNumber insertString:@"+1" atIndex:0];
-    } else {
-        // Invalid USA phone number
-        NSLog(@"%@ is an invalid US phone number", phoneNumber);
+    if ([newPhoneNumber length] == 10) {
+        [newPhoneNumber insertString:@"1" atIndex:0];
     }
     
     return [NSString stringWithString:newPhoneNumber];
@@ -76,8 +68,8 @@
         NSNumber *addressBookID = [NSNumber numberWithInt:ABRecordGetRecordID(person)]; 
         
         // Find if duplicate contact exists in Core Data
-        Contact *contact = nil;
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Contact"];
+        AddressBookContact *contact = nil;
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"AddressBookContact"];
         request.predicate = [NSPredicate predicateWithFormat:@"addressBookID = %@", addressBookID];
         
         NSError *error = nil;
@@ -86,7 +78,7 @@
         if (!contacts || ([contacts count] > 1)) {
             NSLog(@"Error feteching contacts from core data when scanning addres book");
         } else if (![contacts count]) {
-            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:managedObjectContext];
+            contact = [NSEntityDescription insertNewObjectForEntityForName:@"AddressBookContact" inManagedObjectContext:managedObjectContext];
             contact.addressBookID = addressBookID;
         } else {
             contact = [contacts lastObject];
@@ -110,23 +102,23 @@
             CFStringRef phoneNumberValue = ABMultiValueCopyValueAtIndex(phoneNumbers, k);
             CFStringRef phoneNumberLocalizedLabel = ABAddressBookCopyLocalizedLabel(phoneNumberLabel);    // converts "_$!<Work>!$_" to "work" and "_$!<Mobile>!$_" to "mobile"
             
-            // Find the ones you want here
-            NSLog(@"-----PHONE ENTRY -> %@ : %@", phoneNumberLocalizedLabel, phoneNumberValue );
-            
+            //Save phone number
             PhoneNumber *phoneNumber = [NSEntityDescription insertNewObjectForEntityForName:@"PhoneNumber" inManagedObjectContext:managedObjectContext];
             phoneNumber.numberAsStringWithFormat = (__bridge NSString *)phoneNumberValue;
             phoneNumber.numberAsStringWithoutFormat = [self reformatPhoneNumber:(__bridge NSString *)phoneNumberValue];
-            
             phoneNumber.type = (__bridge NSString *)phoneNumberLocalizedLabel;
             phoneNumber.owner = contact;
+            
+            NSLog(@"Address Book Phone Entry -> %@ %@ (%@): %@ (format number), %@ (raw number)", contact.firstName, contact.lastName, phoneNumberLocalizedLabel, phoneNumberValue, phoneNumber.numberAsStringWithoutFormat);
             
             CFRelease(phoneNumberLocalizedLabel);
             CFRelease(phoneNumberLabel);
             CFRelease(phoneNumberValue);
         }
+        
     }
     
-    NSError *error;
+    NSError *error = nil;
     if (![managedObjectContext save:&error]) {
         // Handle the error.
     }

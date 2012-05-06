@@ -41,13 +41,180 @@
                     <navigationItem key="navigationItem" title="Planamo" id="FAJ-8n-gds">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="HE0-0t-ZqR">
                             <connections>
-                                <segue destination="VAG-PO-UA9" kind="modal" identifier="showAddGroup" id="kfb-LX-8r1"/>
+                                <segue destination="VAG-PO-UA9" kind="modal" identifier="addGroup" id="kfb-LX-8r1"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
             </objects>
             <point key="canvasLocation" x="475" y="790"/>
+        </scene>
+        <scene sceneID="Gmz-WM-sDC">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kDP-KR-od7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="" id="WVb-k1-LBc" customClass="EnterPhoneNumberViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ESS-zs-f9e">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="(###) ###-####" minimumFontSize="17" id="hCu-Rs-Jd7">
+                                <rect key="frame" x="81" y="39" width="192" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="(right now, we only support US)" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" id="D7n-7N-8m5">
+                                <rect key="frame" x="41" y="97" width="239" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ihp-MY-B07">
+                                <rect key="frame" x="116" y="138" width="89" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Continue">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="continue:" destination="WVb-k1-LBc" eventType="touchUpInside" id="MHz-7g-USq"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="+1" lineBreakMode="tailTruncation" minimumFontSize="10" id="MBJ-Ey-Xdv">
+                                <rect key="frame" x="51" y="44" width="32" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="N54-bz-otZ">
+                                <rect key="frame" x="20" y="138" width="72" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="login">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="login:" destination="WVb-k1-LBc" eventType="touchUpInside" id="SaH-kc-puS"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Enter phone number" id="A1C-4T-8Ym"/>
+                    <connections>
+                        <outlet property="continueButton" destination="ihp-MY-B07" id="Dgs-4A-ydz"/>
+                        <outlet property="phoneNumberTextField" destination="hCu-Rs-Jd7" id="Vu1-YS-1rO"/>
+                        <segue destination="vDd-nc-9mh" kind="push" identifier="enterPin" id="JhC-PT-lHF"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="475" y="176"/>
+        </scene>
+        <scene sceneID="Rr0-vS-aeu">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1tT-uo-S0p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="vDd-nc-9mh" customClass="EnterPinViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FlC-wY-oXt">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter PIN" minimumFontSize="17" id="zt4-rO-4DY">
+                                <rect key="frame" x="71" y="43" width="192" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="2e8-aA-caG">
+                                <rect key="frame" x="112" y="123" width="89" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Continue">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="continue:" destination="vDd-nc-9mh" eventType="touchUpInside" id="kA0-8w-asR"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Confirm PIN" id="Vw4-eV-BpC"/>
+                    <connections>
+                        <outlet property="continueButton" destination="2e8-aA-caG" id="Qka-L3-qlY"/>
+                        <outlet property="pinTextField" destination="zt4-rO-4DY" id="t2d-iy-xZ8"/>
+                        <segue destination="TZp-2M-NDv" kind="push" identifier="enterName" id="9Ev-nl-TNs"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="919" y="176"/>
+        </scene>
+        <scene sceneID="hef-nl-NoP">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QKr-P0-C1E" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="TZp-2M-NDv" customClass="EnterNameViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LWa-Ni-UFm">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First name" minimumFontSize="17" id="w4E-kP-87M">
+                                <rect key="frame" x="20" y="20" width="275" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last name" minimumFontSize="17" id="duf-xR-ZOL">
+                                <rect key="frame" x="20" y="68" width="275" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="dw5-zS-pnP">
+                                <rect key="frame" x="124" y="115" width="72" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Done!">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="done:" destination="TZp-2M-NDv" eventType="touchUpInside" id="SXC-UG-ePW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Enter Name" id="Nr5-H3-ADh"/>
+                    <connections>
+                        <outlet property="doneButton" destination="dw5-zS-pnP" id="ccz-rP-gle"/>
+                        <outlet property="firstNameTextField" destination="w4E-kP-87M" id="3Ka-fC-b6e"/>
+                        <outlet property="lastNameTextField" destination="duf-xR-ZOL" id="8re-vP-Zh4"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1317" y="181"/>
         </scene>
         <scene sceneID="AGc-WP-9FE">
             <objects>
@@ -130,6 +297,7 @@
                     <nil name="viewControllers"/>
                     <connections>
                         <segue destination="oyl-xx-VBK" kind="relationship" relationship="rootViewController" id="YR1-q6-gsU"/>
+                        <segue destination="zp0-nx-wel" kind="modal" identifier="signUpProcess" id="XaV-Q6-uiT"/>
                     </connections>
                 </navigationController>
             </objects>
@@ -152,6 +320,23 @@
             </objects>
             <point key="canvasLocation" x="-51" y="1436"/>
         </scene>
+        <scene sceneID="ZrS-GA-xsq">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wKJ-7g-85y" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController storyboardIdentifier="" id="zp0-nx-wel" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="17p-zm-1tt">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="WVb-k1-LBc" kind="relationship" relationship="rootViewController" id="e0s-mO-j3l"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="-51" y="176"/>
+        </scene>
     </scenes>
     <classes>
         <class className="AddContactsViewController" superclassName="UIViewController">
@@ -170,6 +355,32 @@
         </class>
         <class className="CoreDataTableViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CoreDataTableViewController.h"/>
+        </class>
+        <class className="EnterNameViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EnterNameViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="done:"/>
+                <relationship kind="outlet" name="doneButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="firstNameTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="lastNameTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="EnterPhoneNumberViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EnterPhoneNumberViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="continue:"/>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="outlet" name="continueButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="phoneNumberTextField" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="EnterPinViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EnterPinViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="continue:"/>
+                <relationship kind="outlet" name="continueButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="pinTextField" candidateClass="UITextField"/>
+            </relationships>
         </class>
         <class className="GroupsListTableViewController" superclassName="CoreDataTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupsListTableViewController.h"/>
