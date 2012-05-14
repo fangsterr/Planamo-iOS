@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WebService.h"
+#import "PlanamoUser.h"
 
-@interface EnterPinViewController : UIViewController <WebServiceDelegate>
+@interface EnterPinViewController : UIViewController
 
+@property (nonatomic, strong) PlanamoUser *currentUser;
 @property (nonatomic, strong) NSString *rawPhoneNumber;
 @property (strong, nonatomic) IBOutlet UITextField *pinTextField;
 @property (strong, nonatomic) IBOutlet UIButton *continueButton;
-@property (strong, nonatomic) WebService *webService;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 - (IBAction)continue:(id)sender;

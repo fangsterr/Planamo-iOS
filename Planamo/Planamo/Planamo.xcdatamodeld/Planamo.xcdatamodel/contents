@@ -17,6 +17,7 @@
     </entity>
     <entity name="GroupUserLink" representedClassName="GroupUserLink" syncable="YES">
         <attribute name="isOrganizer" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="users" inverseEntity="Group" syncable="YES"/>
         <relationship name="user" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="groupsBelongedTo" inverseEntity="PlanamoUser" syncable="YES"/>
     </entity>
@@ -27,7 +28,7 @@
         <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AddressBookContact" inverseName="phoneNumbers" inverseEntity="AddressBookContact" syncable="YES"/>
     </entity>
     <entity name="PlanamoUser" representedClassName="PlanamoUser" syncable="YES">
-        <attribute name="firstName" attributeType="String" maxValueString="100" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="isLoggedInUser" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="lastName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
@@ -40,6 +41,6 @@
         <element name="Group" positionX="160" positionY="192" width="128" height="135"/>
         <element name="GroupUserLink" positionX="160" positionY="192" width="128" height="90"/>
         <element name="PhoneNumber" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="PlanamoUser" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="PlanamoUser" positionX="160" positionY="192" width="128" height="150"/>
     </elements>
 </model>

@@ -37,20 +37,36 @@
     ContactsSolidLine *solidLine;
 }
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, retain) UIFont *font;
 @property (nonatomic, copy) NSString *labelText;
 @property (nonatomic, readonly) UITableView *resultsTable;
-@property (nonatomic, strong) UIView *rightView;
+@property (nonatomic, retain) UIView *rightView;
 @property (nonatomic, readonly) NSString *text;
-@property (nonatomic, strong) id<ContactsTokenFieldDelegate> tokenFieldDelegate;
-@property (nonatomic, strong) NSMutableArray *tokens;
+@property (nonatomic, assign) id<ContactsTokenFieldDelegate> tokenFieldDelegate;
+@property (nonatomic, retain) NSMutableArray *tokens;
 
 - (void)addObject:(id)object;
 - (void)removeObject:(id)object;
 - (NSUInteger)objectCount;
 - (id)objectAtIndex:(NSUInteger)index;
+
+@end
+
+@interface ContactsTokenView : UIView {
+    NSString *title;
+    ContactsTokenField *tokenField;
+    id object;
+    BOOL highlighted;
+}
+
+@property (nonatomic, assign) BOOL highlighted;
+@property (nonatomic, retain) id object;
+@property (nonatomic, retain) NSString *title;
+@property (nonatomic, assign) ContactsTokenField *tokenField;
++ (ContactsTokenView*)tokenWithTitle:(NSString*)aTitle object:(id)anObject;
+- (id)initWithTitle:(NSString*)aTitle object:(id)anObject;
 
 @end
 

@@ -43,25 +43,42 @@
 
     // Get address book and store into array
     ABAddressBookRef addressBook = ABAddressBookCreate();
-    NSArray *thePeoples = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBook);
-    if (!thePeoples)
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    CFIndex nPeople = ABAddressBookGetPersonCount(addressBook);
+        
+    if (!allPeople || !nPeople || nPeople == 0)
     {
         NSLog(@"NO ADDRESS BOOK ENTRIES TO SCAN");
         CFRelease(addressBook);
+        CFRelease(allPeople);
         return;
     }
     
     // Iterate through address book list
     NSUInteger i;
-    for (i=0; i< [thePeoples count]; i++ )
+    for (i=0; i < nPeople; i++ )
     {
-        ABRecordRef person = (__bridge ABRecordRef)[thePeoples objectAtIndex:i];
+        ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
+        if (!person) continue;
         
         // Last time the contact was modified
         if (lastScanned) {
             CFDateRef modifyDate = ABRecordCopyValue(person, kABPersonModificationDateProperty);
             // If last scanned date is after modified date, (i.e. continue)
-            if ([lastScanned compare:(__bridge NSDate*)modifyDate] == NSOrderedDescending) continue;
+            if ([lastScanned compare:(__bridge NSDate*)modifyDate] == NSOrderedDescending) {
+                CFRelease(modifyDate);
+                continue;
+            } else {
+                CFRelease(modifyDate);
+            }
+        } 
+        
+        // Make sure it is a contact with first and last names, otherwise, ignore
+        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);  
+        if (!firstName || !lastName) {
+            CFRelease(person);
+            continue;
         }
         
         // Get contact's address book ID
@@ -85,18 +102,19 @@
         }
         
         // Update name
-        NSString *firstName = (__bridge NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-        NSString *lastName = (__bridge NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);       
         contact.firstName = firstName;
         contact.lastName = lastName;
-        //TODO - what if address book doesnt have first and last name?
         
-        // Update phone Numbers
-        [contact removePhoneNumbers:contact.phoneNumbers];
+        // Delete existing phone numbers
+        for (PhoneNumber *number in contact.phoneNumbers) {
+            [managedObjectContext deleteObject:number];
+        }
+        
+        // Add new phone numbers
         ABMutableMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
         CFIndex phoneNumberCount = ABMultiValueGetCount(phoneNumbers);
         NSUInteger k;
-        for ( k=0; k<phoneNumberCount; k++ )
+        for (k=0; k < phoneNumberCount; k++)
         {
             CFStringRef phoneNumberLabel = ABMultiValueCopyLabelAtIndex(phoneNumbers, k);
             CFStringRef phoneNumberValue = ABMultiValueCopyValueAtIndex(phoneNumbers, k);
@@ -115,17 +133,18 @@
             CFRelease(phoneNumberLabel);
             CFRelease(phoneNumberValue);
         }
-        
+        CFRelease(phoneNumbers);
+        CFRelease(person);
     }
     
     NSError *error = nil;
     if (![managedObjectContext save:&error]) {
-        // Handle the error.
+        NSLog(@"%@", error);
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:@"AddressBookLastScannedDate"];
     
-    CFRelease(addressBook);
+    CFRelease(allPeople);
 }
 
 @end

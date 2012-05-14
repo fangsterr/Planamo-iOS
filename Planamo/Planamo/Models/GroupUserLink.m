@@ -14,6 +14,7 @@
 @implementation GroupUserLink
 
 @dynamic isOrganizer;
+@dynamic lastUpdated;
 @dynamic group;
 @dynamic user;
 

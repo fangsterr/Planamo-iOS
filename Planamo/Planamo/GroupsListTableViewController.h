@@ -15,4 +15,7 @@
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
+//temp
+-(IBAction)refresh:(id)sender;
+
 @end

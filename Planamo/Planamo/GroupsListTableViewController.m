@@ -9,6 +9,9 @@
 #import "GroupsListTableViewController.h"
 #import "Group.h"
 #import "EnterPhoneNumberViewController.h"
+#import "GroupUsersListTableViewController.h"
+#import "PlanamoUser+Helper.h"
+#import "LaunchScreenViewController.h"
 
 @implementation GroupsListTableViewController
 
@@ -31,27 +34,6 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-/** 
- Returns true if there is a user already logged in on the app. Otherwise false (so can show sign up process)
- */
-- (BOOL)isAUserLoggedIn 
-{
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"PlanamoUser"];
-    request.predicate = [NSPredicate predicateWithFormat:@"isLoggedInUser = %@", [NSNumber numberWithBool:YES]];
-    
-    NSError *error = nil;
-    NSArray *userArray = [self.managedObjectContext executeFetchRequest:request error:&error];
-    
-    if (!userArray || ([userArray count] > 1)) {
-        NSLog(@"Error feteching loggedInUser from core data");
-        return NO;
-    } else if (![userArray count]) {
-        return NO;
-    } else {
-        return YES;
-    }
-}
-
 #pragma mark - Fetched results controller
 
 /**
@@ -72,8 +54,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //TODO - if user not logged in
-    [self.navigationController performSegueWithIdentifier:@"signUpProcess" sender:self];
+    
+    // If user is logged in, show launch screen
+    if ([PlanamoUser currentLoggedInUserWithManagedObjectContext:self.managedObjectContext]) {
+        [self performSegueWithIdentifier:@"launchScreen" sender:self];
+
+    } else {
+        // If user is not logged in, show sign up screen
+        [self performSegueWithIdentifier:@"signUpProcess" sender:self];
+    }
 }
 
 - (void)viewDidUnload
@@ -175,6 +164,12 @@
      */
 }
 
+#pragma mark - IB actions
+
+-(IBAction)refresh:(id)sender {
+    
+}
+
 #pragma mark - Add Group View
 
 - (void)addGroupViewControllerDidCancel:(AddGroupViewController *)controller
@@ -185,7 +180,7 @@
 - (void)addGroupViewControllerDidFinish:(AddGroupViewController *)controller
 {
     [self dismissModalViewControllerAnimated:YES];
-    //TODO - show groups list
+    //TODO - show groups list (refetch)
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -199,6 +194,14 @@
         UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
         EnterPhoneNumberViewController *phoneNumberController = (EnterPhoneNumberViewController *)navController.topViewController;
         phoneNumberController.managedObjectContext = self.managedObjectContext;
+    } else if ([[segue identifier] isEqualToString:@"groupUsersList"]) {
+        NSIndexPath *selectedRowIndex = [self.tableView indexPathForSelectedRow];
+        GroupUsersListTableViewController *groupUsersController = [segue destinationViewController];
+        groupUsersController.group = [self.fetchedResultsController objectAtIndexPath:selectedRowIndex];
+        groupUsersController.managedObjectContext = self.managedObjectContext;
+    } else if ([[segue identifier] isEqualToString:@"launchScreen"]) {
+        LaunchScreenViewController *launchScreenController = (LaunchScreenViewController *)[segue destinationViewController];
+        launchScreenController.managedObjectContext = self.managedObjectContext;
     }
 }
 

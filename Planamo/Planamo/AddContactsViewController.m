@@ -7,7 +7,6 @@
 //
 
 #import "AddContactsViewController.h"
-#import "AddressBookScanner.h"
 
 @implementation AddContactsViewController
 
@@ -40,7 +39,6 @@
     self.tokenField.labelText = @"Who:";
     [self.tokenField becomeFirstResponder];
     self.view = self.tokenField;
-    [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
 }
 
 

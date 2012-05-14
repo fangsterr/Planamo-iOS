@@ -9,10 +9,13 @@
 #import "AddGroupViewController.h"
 
 #import "PhoneNumber.h"
+#import "PlanamoUser+Helper.h"
+#import "Group+Helper.h"
 #import "AddressBookContact.h"
 #import "AddContactsViewController.h"
-
-#import "ASIHTTPRequest.h"
+#import "APIWebService.h"
+#import "MBProgressHUD.h"
+#import "AddressBookScanner.h"
 
 @interface AddGroupViewController ()
 
@@ -48,25 +51,18 @@
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.addContactsController = [[AddContactsViewController alloc] init];
     self.addContactsController.managedObjectContext = self.managedObjectContext;
-    self.addContactsController.tokenField = [[ContactsTokenField alloc] initWithFrame:CGRectMake(0, 0, 320, 460)];
+    self.addContactsController.tokenField = [[ContactsTokenField alloc] initWithFrame:CGRectMake(0, 0, 320, 150)];
     self.addContactsController.tokenField.tokenFieldDelegate = self;
     [self.contactsView addSubview:self.addContactsController.view];
     
     self.groupNameTextField.delegate = self;
+    
+    [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -86,17 +82,82 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait || 
             interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark - Actions
 
+// TODO - show welcome message screen
 - (IBAction)done:(id)sender
 {
-    [self.delegate addGroupViewControllerDidCancel:self];
-    //TODO - add group
+    // Convert user tokens into json array
+    NSMutableArray *usersInGroupArray = [[NSMutableArray alloc] init];
+    NSArray *contactsTokenArray = self.addContactsController.tokenField.tokens;
+    for (ContactsTokenView *token in contactsTokenArray) {
+        NSString *firstName = ((PhoneNumber*)token.object).owner.firstName;
+        NSString *lastName = ((PhoneNumber*)token.object).owner.lastName;
+        NSString *phoneNumber = ((PhoneNumber*)token.object).numberAsStringWithoutFormat;
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:firstName, @"firstName", lastName, @"lastName", phoneNumber, @"phoneNumber", nil];
+        NSDictionary *userInGroup = [NSDictionary dictionaryWithObjectsAndKeys:userInfo, @"user", [NSNumber numberWithBool:NO], @"isOrganizer", nil];
+        [usersInGroupArray addObject:userInGroup];
+    }
+    
+    // Add logged in user to users json array
+    PlanamoUser *currentUser = [PlanamoUser currentLoggedInUserWithManagedObjectContext:self.managedObjectContext];
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:currentUser.firstName, @"firstName", currentUser.lastName, @"lastName", currentUser.phoneNumber, @"phoneNumber", nil];
+    NSDictionary *userInGroup = [NSDictionary dictionaryWithObjectsAndKeys:userInfo, @"user", [NSNumber numberWithBool:YES], @"isOrganizer", nil];
+    [usersInGroupArray addObject:userInGroup];
+    
+    // Get group name
+    NSString *groupName = self.groupNameTextField.text;
+    
+    // Create default welcome message - TODO
+    NSString *welcomeMessage = [NSString stringWithFormat:@"You just got added to the %@ group by @% @% on Planamo. You will receive messages from %@ that are broadcasted to the entire group. However, your replies will only go to %@ and the organizers", groupName, currentUser.firstName, currentUser.lastName, currentUser.firstName, currentUser.firstName];
+    
+    // Call server
+    NSString *functionName = [NSString stringWithFormat:@"group/"];
+    NSMutableDictionary *newGroupDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:groupName, @"name", usersInGroupArray, @"usersInGroup", welcomeMessage, @"welcomeMessage", nil];
+    
+    NSLog(@"Calling API - POST api/%@, jsonData: %@", functionName, newGroupDictionary);
+    
+    [[APIWebService sharedWebService] postPath:functionName parameters:newGroupDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"POST %@ - return: %@", functionName, JSON);
+        [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
+        
+        int code = [[JSON valueForKeyPath:@"code"] intValue];
+        
+        // If good, create group and end group creation process
+        if (!code || code == 0) {
+            NSNumber *groupID = [NSNumber numberWithInt:[[JSON valueForKeyPath:@"id"] intValue]];
+            NSString *twilioNumberForUser = [JSON valueForKeyPath:@"twilioNumberForUser"];
+            [newGroupDictionary setObject:groupID forKey:@"id"]; 
+            [newGroupDictionary setObject:twilioNumberForUser forKey:@"twilioNumberForUser"];
+            
+            [Group createNewGroupFromDictionary:newGroupDictionary withManagedObjectContext:self.managedObjectContext];
+            [self.delegate addGroupViewControllerDidFinish:self];
+            
+        } else {
+            // Otherwise, alert error
+            [[APIWebService sharedWebService] showAlertWithErrorCode:code];
+            [self.groupNameTextField becomeFirstResponder];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
+        
+        [[APIWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [self.groupNameTextField becomeFirstResponder];
+    }];
+    
+    
+    // Add progress indicator
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Creating group...";
+    
+    [self.groupNameTextField resignFirstResponder];
+    [self.addContactsController.tokenField resignFirstResponder]; 
 }
 
 - (IBAction)cancel:(id)sender
@@ -108,10 +169,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    /*if ([[segue identifier] isEqualToString:@"showAddContacts"]) {
+    if ([[segue identifier] isEqualToString:@"showAddContacts"]) {
         //[[segue destinationViewController] setDelegate:self];
         [[segue destinationViewController] setManagedObjectContext:self.managedObjectContext];
-    }*/
+    }
 }
 
 #pragma mark - ContactsTokenFieldDelegate

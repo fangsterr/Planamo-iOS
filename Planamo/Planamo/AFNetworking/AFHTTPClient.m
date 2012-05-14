@@ -467,7 +467,7 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
 	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] initWithURL:url] autorelease];
     [request setHTTPMethod:method];
     [request setAllHTTPHeaderFields:self.defaultHeaders];
-	
+    	
     if (parameters) {        
         if ([method isEqualToString:@"GET"] || [method isEqualToString:@"HEAD"] || [method isEqualToString:@"DELETE"]) {
             url = [NSURL URLWithString:[[url absoluteString] stringByAppendingFormat:[path rangeOfString:@"?"].location == NSNotFound ? @"?%@" : @"&%@", AFQueryStringFromParametersWithEncoding(parameters, self.stringEncoding)]];
@@ -629,6 +629,7 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
 	NSURLRequest *request = [self requestWithMethod:@"GET" path:path parameters:parameters];
+    NSLog(@"%@ %@ %@", request, request.HTTPBody, request.allHTTPHeaderFields);
     AFHTTPRequestOperation *operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
     [self enqueueHTTPRequestOperation:operation];
 }

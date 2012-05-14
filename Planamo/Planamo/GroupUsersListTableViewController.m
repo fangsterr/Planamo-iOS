@@ -8,6 +8,7 @@
 
 #import "GroupUsersListTableViewController.h"
 
+#import "GroupUserLink.h"
 #import "PlanamoUser.h"
 
 @implementation GroupUsersListTableViewController
@@ -39,8 +40,9 @@
  */
 - (void)setupFetchedResultsController {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    fetchRequest.entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext:self.managedObjectContext];
-    fetchRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"lastUpdated" ascending:YES]];
+    fetchRequest.entity = [NSEntityDescription entityForName:@"GroupUserLink" inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"group.id = %@", self.group.id];
+    fetchRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"user.firstName" ascending:YES]];
     
     // Create and initialize fech results controller
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil]; //TODO - section name key path, cache name
@@ -64,6 +66,12 @@
 }
 */
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self setupFetchedResultsController];
+    self.title = self.group.name;
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -83,8 +91,8 @@
     }
     
     // Configure the cell...
-    PlanamoUser *user = [self.fetchedResultsController objectAtIndexPath:indexPath];
-	cell.textLabel.text = user.firstName; //TODO
+    GroupUserLink *groupUserLink = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", groupUserLink.user.firstName, groupUserLink.user.lastName];
     
     return cell;
 }

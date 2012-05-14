@@ -14,6 +14,7 @@
 @interface GroupUserLink : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * isOrganizer;
+@property (nonatomic, retain) NSDate * lastUpdated;
 @property (nonatomic, retain) Group *group;
 @property (nonatomic, retain) PlanamoUser *user;
 

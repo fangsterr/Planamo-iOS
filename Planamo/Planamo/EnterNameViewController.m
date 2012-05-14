@@ -8,6 +8,7 @@
 
 #import "EnterNameViewController.h"
 #import "MBProgressHUD.h"
+#import "APIWebService.h"
 
 @implementation EnterNameViewController
 
@@ -16,6 +17,7 @@
 @synthesize doneButton;
 @synthesize rawPhoneNumber = _rawPhoneNumber;
 @synthesize managedObjectContext = _managedObjectContext;
+@synthesize currentUser = _currentUser;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -51,6 +53,11 @@
 }
 */
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.firstNameTextField becomeFirstResponder];
+}
+
 - (void)viewDidUnload
 { 
     [self setLastNameTextField:nil];
@@ -63,57 +70,59 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
+            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
 }
 
 #pragma mark - Button actions
 
 - (IBAction)done:(id)sender
-{        
+{      
+    // Call server
+    NSString *functionName = [NSString stringWithFormat:@"user/%@/", self.currentUser.id];
+    NSDictionary *userUpdateDictionary = [NSDictionary dictionaryWithObjectsAndKeys:self.firstNameTextField.text, @"firstName", self.lastNameTextField.text, @"lastName", nil];
+    
+    NSLog(@"Calling API - PUT api/%@, jsonData: %@", functionName, userUpdateDictionary);
+    
+    [[APIWebService sharedWebService] putPath:functionName parameters:userUpdateDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"PUT %@ - return: %@", functionName, JSON);
+        [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
+        
+        int code = [[JSON valueForKeyPath:@"code"] intValue];
+        
+        // If good, update user and end sign up process
+        if (!code || code == 0) {
+            self.currentUser.firstName = self.firstNameTextField.text;
+            self.currentUser.lastName = self.lastNameTextField.text;
+            
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"%@", error);
+            }
+            
+            [self.presentingViewController dismissModalViewControllerAnimated:YES];
+            
+        } else {
+            // Otherwise, alert error
+            [[APIWebService sharedWebService] showAlertWithErrorCode:code];
+            [self.firstNameTextField becomeFirstResponder];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
+        
+        [[APIWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [self.firstNameTextField becomeFirstResponder];
+    }];
+
+    
+    // Add progress indicator
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = @"Updating name...";
     
     [self.firstNameTextField resignFirstResponder];
     [self.lastNameTextField resignFirstResponder];
-}
-
-
-#pragma mark - Web Service Delegate
-
--(void)alertWebServiceWithErrorCode:(int)errorCode {  
-    // Only one error possible
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" 
-                                           message:@"Sorry! Unable to connect to server. Try again" 
-                                          delegate:nil 
-                                 cancelButtonTitle:@"OK"
-                                 otherButtonTitles:nil];
-    [alert show];
-    [self.firstNameTextField becomeFirstResponder];
-}
-
-
--(void)verifyNewMobileUserCallbackReturn:(NSDictionary *)responseDictionary {
-    NSLog(@"verifyNewMobileUser callback dictionary: %@", responseDictionary);
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
-    
-    int code = [[responseDictionary valueForKey:@"code"] intValue];
-    
-    // If good, go to next page
-    if (code == 0) {
-        //     [self performSegueWithIdentifier:@"enterPin" sender:self];
-    } else {
-        // Otherwise, alert error
-        [self alertWebServiceWithErrorCode:code];
-    }
-}
-
--(void)webService:(WebService *)webService didFailWithError:(NSError *)error {
-    [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
-    
-    int errorCode = [error code];
-    [self alertWebServiceWithErrorCode:errorCode];
 }
 
 @end

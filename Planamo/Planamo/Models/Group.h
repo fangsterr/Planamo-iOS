@@ -2,7 +2,7 @@
 //  Group.h
 //  Planamo
 //
-//  Created by Stanley Tang on 01/05/2012.
+//  Created by Stanley Tang on 12/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -16,6 +16,7 @@
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSDate * lastUpdated;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * twilioNumberForUser;
 @property (nonatomic, retain) NSString * welcomeMessage;
 @property (nonatomic, retain) NSSet *users;
 @end

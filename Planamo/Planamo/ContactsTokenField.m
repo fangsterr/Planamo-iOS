@@ -58,7 +58,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
         shadowLayer = [[CAGradientLayer alloc] init];
         CGColorRef darkColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5].CGColor;
         CGColorRef lightColor = [UIColor colorWithWhite:1 alpha:0].CGColor;
-        shadowLayer.colors = [NSArray arrayWithObjects:(__bridge id)darkColor, (__bridge id)lightColor, nil];
+        shadowLayer.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
         [self.layer addSublayer:shadowLayer];
     }
     
@@ -70,26 +70,16 @@ static NSString *const kHiddenCharacter = @"\u200B";
     shadowLayer.frame = CGRectMake(0, 0, bounds.size.width, bounds.size.height);
 }
 
+- (void)dealloc {
+    [shadowLayer release];
+    
+    [super dealloc];
+}
+
 @end
 
 #define TOKEN_HZ_PADDING            8.5
 #define TOKEN_VT_PADDING            2.5
-
-@interface ContactsTokenView : UIView {
-    NSString *title;
-    ContactsTokenField *tokenField;
-    id object;
-    BOOL highlighted;
-}
-
-@property (nonatomic, assign) BOOL highlighted;
-@property (nonatomic, retain) id object;
-@property (nonatomic, retain) NSString *title;
-@property (nonatomic, strong) ContactsTokenField *tokenField;
-+ (ContactsTokenView*)tokenWithTitle:(NSString*)aTitle object:(id)anObject;
-- (id)initWithTitle:(NSString*)aTitle object:(id)anObject;
-
-@end
 
 @implementation ContactsTokenView
 
@@ -99,7 +89,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
 @synthesize tokenField;
 
 + (ContactsTokenView*)tokenWithTitle:(NSString*)aTitle object:(id)anObject {
-    return [[ContactsTokenView alloc] initWithTitle:aTitle object:anObject];
+    return [[[ContactsTokenView alloc] initWithTitle:aTitle object:anObject] autorelease];
 }
 
 - (id)initWithTitle:(NSString*)aTitle object:(id)anObject {
@@ -183,6 +173,13 @@ static NSString *const kHiddenCharacter = @"\u200B";
     return titleSize;
 }
 
+- (void)dealloc {
+    self.title = nil;
+    self.tokenField = nil;
+    
+    [super dealloc];
+}
+
 @end
 
 @interface ContactsTokenField ()
@@ -218,16 +215,16 @@ static NSString *const kHiddenCharacter = @"\u200B";
     if (self) {
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
-        self.backingView = [[UIView alloc] initWithFrame:CGRectZero];
+        self.backingView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
         backingView.backgroundColor = [UIColor whiteColor];
         [self addSubview:backingView];
         
         numberOfResults = 0;
         self.font = [UIFont systemFontOfSize:14];
         
-        self.tokenContainer = [[UIView alloc] initWithFrame:CGRectZero];
+        self.tokenContainer = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
         tokenContainer.backgroundColor = [UIColor clearColor];
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTappedTokenContainer)];
+        UITapGestureRecognizer *tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTappedTokenContainer)] autorelease];
         [tokenContainer addGestureRecognizer:tapGesture];
         [self addSubview:tokenContainer];
         
@@ -236,10 +233,10 @@ static NSString *const kHiddenCharacter = @"\u200B";
         resultsTable.delegate = self;
         [self addSubview:resultsTable];
         
-        self.shadowView = [[ContactsShadowView alloc] initWithFrame:CGRectZero];
+        self.shadowView = [[[ContactsShadowView alloc] initWithFrame:CGRectZero] autorelease];
         [self addSubview:shadowView];
         
-        self.textField = [[ContactsTextField alloc] initWithFrame:CGRectZero];
+        self.textField = [[[ContactsTextField alloc] initWithFrame:CGRectZero] autorelease];
         textField.text = kHiddenCharacter;
         textField.delegate = self;
         textField.font = font;
@@ -249,7 +246,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
             textField.spellCheckingType = UITextSpellCheckingTypeNo;
         [tokenContainer addSubview:textField];
         
-        self.tokens = [[NSMutableArray alloc] init];
+        self.tokens = [[[NSMutableArray alloc] init] autorelease];
         
         solidLine = [[ContactsSolidLine alloc] initWithFrame:CGRectZero];
         [self addSubview:solidLine];
@@ -263,7 +260,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
 - (void)performFetch
 {
     if (self.fetchedResultsController) {
-        NSError *error;
+        NSError *error = nil;
         [self.fetchedResultsController performFetch:&error];
         if (error) NSLog(@"[%@ %@] %@ (%@)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [error localizedDescription], [error localizedFailureReason]);
     }
@@ -274,15 +271,15 @@ static NSString *const kHiddenCharacter = @"\u200B";
         return _fetchedResultsController;
     } else {
         // Set up fetched results controller for Phone Number
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        fetchRequest.entity = [NSEntityDescription entityForName:@"PhoneNumber" inManagedObjectContext:self.managedObjectContext];
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PhoneNumber"];
         fetchRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"owner.firstName" ascending:YES]];
         
         // Create and initialize fech results controller
         NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil]; //TODO - section name key path, cache name
-        
-        _fetchedResultsController = aFetchedResultsController;
-        return aFetchedResultsController;
+        self.fetchedResultsController = aFetchedResultsController;
+        [aFetchedResultsController release];
+
+        return _fetchedResultsController;
     }
 }
 
@@ -306,11 +303,11 @@ static NSString *const kHiddenCharacter = @"\u200B";
     // Currently we don't support non-usa numbers - TODO
     PhoneNumber *number = (PhoneNumber *)object;
     if (![number.numberAsStringWithoutFormat hasPrefix:@"1"]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not a valid phone number" 
+        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Not a valid phone number" 
                                                     message:@"Sorry! But we currently support only USA-only numbers." 
                                                    delegate:nil 
                                           cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
+                                          otherButtonTitles:nil] autorelease];
         [alert show];
         return;
     }
@@ -336,7 +333,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
     
     ContactsTokenView *token = [ContactsTokenView tokenWithTitle:title object:object];
     token.tokenField = self;
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTappedToken:)];
+    UITapGestureRecognizer *tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTappedToken:)] autorelease];
     [token addGestureRecognizer:tapGesture];
     [tokens addObject:token];
     [tokenContainer addSubview:token];
@@ -572,7 +569,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
     static NSString *CellIdentifier = @"ContactsSearchCell";
     UITableViewCell *cell = [aTableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
     
     PhoneNumber *number = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", number.owner.firstName, number.owner.lastName];
@@ -718,7 +715,9 @@ static NSString *const kHiddenCharacter = @"\u200B";
 - (void)setFont:(UIFont*)aFont {
     if (font == aFont)
         return;
-    font = aFont;
+    
+    [font release];
+    font = [aFont retain];
     
     textField.font = font;
 }
@@ -726,10 +725,13 @@ static NSString *const kHiddenCharacter = @"\u200B";
 - (void)setLabelText:(NSString *)someText {
     if ([labelText isEqualToString:someText])
         return;
-    labelText = someText;
+    
+    [labelText release];
+    labelText = [someText retain];
     
     // remove the current label
     [label removeFromSuperview];
+    [label release];
     label = nil;
     
     // if there is some new text, then create and add a new label
@@ -752,11 +754,12 @@ static NSString *const kHiddenCharacter = @"\u200B";
         return;
     
     [rightView removeFromSuperview];
+    [rightView release];
     rightView = nil;
     
     if (aView)
     {
-        rightView = aView;
+        rightView = [aView retain];
         [self addSubview:rightView];
     }
     
@@ -768,6 +771,26 @@ static NSString *const kHiddenCharacter = @"\u200B";
         return @"";
     
     return textField.text;
+}
+
+#pragma mark - Memory Management
+
+- (void)dealloc {
+    [labelText release];
+    [label release];
+    self.font = nil;
+    self.shadowView = nil;
+    [resultsTable release];
+    [rightView release];
+    rightView = nil;
+    self.textField = nil;
+    self.tokenContainer = nil;
+    self.tokens = nil;
+    self.backingView = nil;
+    [_managedObjectContext release];
+    [_fetchedResultsController release];
+    
+    [super dealloc];
 }
 
 @end

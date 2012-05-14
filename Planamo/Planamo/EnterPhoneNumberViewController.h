@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "PhoneNumberFormatter.h"
-#import "WebService.h"
 
-@interface EnterPhoneNumberViewController : UIViewController <WebServiceDelegate> {
+@interface EnterPhoneNumberViewController : UIViewController {
     @private
         int _textFieldSemaphore;
         PhoneNumberFormatter *_phoneNumberFormatter;
@@ -19,10 +18,8 @@
 
 @property (strong, nonatomic) IBOutlet UITextField *phoneNumberTextField;
 @property (strong, nonatomic) IBOutlet UIButton *continueButton;
-@property (strong, nonatomic) WebService *webService;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 - (IBAction)continue:(id)sender;
-- (IBAction)login:(id)sender;
 
 @end

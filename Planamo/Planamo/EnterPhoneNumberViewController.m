@@ -9,12 +9,12 @@
 #import "EnterPhoneNumberViewController.h"
 #import "EnterPinViewController.h"
 #import "MBProgressHUD.h"
+#import "UserActionsWebService.h"
 
 @implementation EnterPhoneNumberViewController
 
 @synthesize phoneNumberTextField;
 @synthesize continueButton;
-@synthesize webService;
 @synthesize managedObjectContext = _managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -28,23 +28,20 @@
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Phone number formatter
+#pragma mark - Phone Number Formatter
 
 - (void)createPhoneNumberFormatter {
     _textFieldSemaphore = 0;
     _phoneNumberFormatter = [[PhoneNumberFormatter alloc] init];
     [self.phoneNumberTextField addTarget:self
                                   action:@selector(autoFormatTextField:)
-                        forControlEvents:UIControlEventValueChanged
-     ];
+                        forControlEvents:UIControlEventValueChanged];
     [self.phoneNumberTextField addTarget:self
                                   action:@selector(autoFormatTextField:)
-                        forControlEvents:UIControlEventEditingChanged
-     ];
+                        forControlEvents:UIControlEventEditingChanged];
 }
 
 - (void)autoFormatTextField:(id)sender {    
@@ -70,8 +67,6 @@
     [super viewDidLoad];
     [self createPhoneNumberFormatter];
     [self.continueButton setEnabled:NO];
-    self.webService = [[WebService alloc] init];
-    self.webService.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -88,67 +83,53 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait || 
             interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
 }
+
 
 #pragma mark - Button actions
 
 - (IBAction)continue:(id)sender
 {    
+    // Get number and append USA country code - TODO internationalization
     _rawPhoneNumber = [_phoneNumberFormatter strip:self.phoneNumberTextField.text]; 
-    //Append USA country code - TODO internationalization
     _rawPhoneNumber = [NSString stringWithFormat:@"1%@", _rawPhoneNumber];
-    [self.webService createNewMobileUserWithPhoneNumber:_rawPhoneNumber];
+
+    // Call server
+    NSString *functionName = @"createNewMobileUser/";
+    NSDictionary *phoneNumberDictionary = [NSDictionary dictionaryWithObjectsAndKeys:_rawPhoneNumber, @"phoneNumber", @"j0d1eCHILLBE4R", @"secretCode", nil];
+    
+    NSLog(@"Calling user action - url:accounts/%@, jsonData: %@", functionName, phoneNumberDictionary);
+    
+    [[UserActionsWebService sharedWebService] postPath:functionName parameters:phoneNumberDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"createNewMobileUser return: %@", JSON);
+        [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
+        
+        int code = [[JSON valueForKeyPath:@"code"] intValue];
+        
+        // If good, next
+        if (code == 0) {
+            [self performSegueWithIdentifier:@"enterPin" sender:self];
+        } else {
+            // Otherwise, alert error
+            [[UserActionsWebService sharedWebService] showAlertWithErrorCode:code];
+            [self.phoneNumberTextField becomeFirstResponder];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
+        
+        [[UserActionsWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [self.phoneNumberTextField becomeFirstResponder];
+    }];
     
     // Add progress indicator
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = @"Creating account...";
     
     [self.phoneNumberTextField resignFirstResponder];
-}
-
-//temp
-- (IBAction)login:(id)sender
-{
-    [self.webService loginMobile];
-}
-
-#pragma mark - Web Service Delegate
-
--(void)alertWebServiceWithErrorCode:(int)errorCode {
-    // Only one possible error, so always alert
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" 
-                                                    message:@"Sorry! Unable to connect to server. Try again" 
-                                                   delegate:nil 
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
-    [self.phoneNumberTextField becomeFirstResponder];
-}
-
--(void)createNewMobileUserCallbackReturn:(NSDictionary *)responseDictionary {
-    NSLog(@"createNewMobileUser callback dictionary: %@", responseDictionary);
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
-    
-    int code = [[responseDictionary valueForKey:@"code"] intValue];
-    
-    // If good, go to next page
-    if (code == 0) {
-        [self performSegueWithIdentifier:@"enterPin" sender:self];
-    } else {
-        // Otherwise, alert error
-        [self alertWebServiceWithErrorCode:code];
-    }
-}
-
--(void)webService:(WebService *)webService didFailWithError:(NSError *)error {
-    [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
-    
-    int errorCode = [error code];
-    [self alertWebServiceWithErrorCode:errorCode];
 }
 
 #pragma mark - Enter Pin View Controller
