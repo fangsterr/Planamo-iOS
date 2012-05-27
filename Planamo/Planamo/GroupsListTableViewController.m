@@ -7,13 +7,13 @@
 //
 
 #import "GroupsListTableViewController.h"
-#import "Group.h"
-#import "EnterPhoneNumberViewController.h"
+#import "Group+Helper.h"
 #import "GroupUsersListTableViewController.h"
-#import "PlanamoUser+Helper.h"
-#import "LaunchScreenViewController.h"
+#import "APIWebService.h"
 
-@implementation GroupsListTableViewController
+@implementation GroupsListTableViewController {
+    PullToRefreshView *pull;
+}
 
 @synthesize managedObjectContext = _managedObjectContext;
 
@@ -34,7 +34,7 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - Fetched results controller
+#pragma mark - Fetched Results Controller
 
 /**
  Create fetch request with Groups entity. Create fetched results controller and attach to this table view controller
@@ -49,20 +49,58 @@
     self.fetchedResultsController = aFetchedResultsController;
 }
 
-#pragma mark - View lifecycle
+#pragma mark - PullToRefresh Delegate
+
+- (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
+{
+    [[APIWebService sharedWebService] getPath:@"group" parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"pull to refresh get group return: %@", JSON);
+        
+        NSString *jsonCode = [JSON valueForKeyPath:@"code"];
+        int code = [jsonCode intValue];
+        
+        // If good, next
+        if (!jsonCode || code == 0) {
+            // add data
+            [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"objects"] inManagedObjectContext:self.managedObjectContext];
+            
+            [pull finishedLoading];
+            
+        } else {
+            // Otherwise, alert error (TODO - logout)
+            [[APIWebService sharedWebService] showAlertWithErrorCode:code];
+            
+            [pull finishedLoading];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        
+        [[APIWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        
+        [pull finishedLoading];
+    }];
+    
+}
+
+#pragma mark - View Lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // If user is logged in, show launch screen
-    if ([PlanamoUser currentLoggedInUserWithManagedObjectContext:self.managedObjectContext]) {
-        [self performSegueWithIdentifier:@"launchScreen" sender:self];
-
-    } else {
-        // If user is not logged in, show sign up screen
-        [self performSegueWithIdentifier:@"signUpProcess" sender:self];
-    }
+    // Set table view bounds to fit within root view controller (with tabbar)
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];
+   
+    // If put in viewWillAppear, only need to set height to 367 - TODO
+    CGRect frame = self.view.frame;
+	frame.size.height = 412;
+	self.view.frame = frame;
+    
+    // Pull to refresh
+    pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
+    [pull setDelegate:self];
+    [self.tableView addSubview:pull];
 }
 
 - (void)viewDidUnload
@@ -93,7 +131,7 @@
     [super viewDidDisappear:animated];
 }
 
-#pragma mark - Table view data source
+#pragma mark - Table View Data Source / Delegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -150,58 +188,27 @@
     return YES;
 }
 */
-
-#pragma mark - Table view delegate
-
+/*
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    /*
+    
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
      // ...
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
+     
+} */
 
-#pragma mark - IB actions
-
--(IBAction)refresh:(id)sender {
-    
-}
-
-#pragma mark - Add Group View
-
-- (void)addGroupViewControllerDidCancel:(AddGroupViewController *)controller
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (void)addGroupViewControllerDidFinish:(AddGroupViewController *)controller
-{
-    [self dismissModalViewControllerAnimated:YES];
-    //TODO - show groups list (refetch)
-}
+#pragma mark - View Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"addGroup"]) {
-        UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
-        AddGroupViewController *addGroupController = (AddGroupViewController *)navController.topViewController;
-        addGroupController.delegate = self;
-        addGroupController.managedObjectContext = self.managedObjectContext;
-    } else if ([[segue identifier] isEqualToString:@"signUpProcess"]) {
-        UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
-        EnterPhoneNumberViewController *phoneNumberController = (EnterPhoneNumberViewController *)navController.topViewController;
-        phoneNumberController.managedObjectContext = self.managedObjectContext;
-    } else if ([[segue identifier] isEqualToString:@"groupUsersList"]) {
+    if ([[segue identifier] isEqualToString:@"groupUsersList"]) {
         NSIndexPath *selectedRowIndex = [self.tableView indexPathForSelectedRow];
         GroupUsersListTableViewController *groupUsersController = [segue destinationViewController];
         groupUsersController.group = [self.fetchedResultsController objectAtIndexPath:selectedRowIndex];
         groupUsersController.managedObjectContext = self.managedObjectContext;
-    } else if ([[segue identifier] isEqualToString:@"launchScreen"]) {
-        LaunchScreenViewController *launchScreenController = (LaunchScreenViewController *)[segue destinationViewController];
-        launchScreenController.managedObjectContext = self.managedObjectContext;
     }
 }
 

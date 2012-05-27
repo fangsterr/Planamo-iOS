@@ -9,13 +9,10 @@
 #import <UIKit/UIKit.h>
 
 #import "CoreDataTableViewController.h"
-#import "AddGroupViewController.h"
+#import "PullToRefreshView.h"
 
-@interface GroupsListTableViewController : CoreDataTableViewController <AddGroupViewControllerDelegate>
+@interface GroupsListTableViewController : CoreDataTableViewController <PullToRefreshViewDelegate>
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-
-//temp
--(IBAction)refresh:(id)sender;
 
 @end

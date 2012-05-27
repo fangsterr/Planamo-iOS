@@ -43,11 +43,21 @@ static NSString * const kAPIWebServiceBaseURLString = @"https://sharp-fire-8026.
 
 -(void)showAlertWithErrorCode:(int)errorCode
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" 
+    UIAlertView *alert = nil;
+    if (errorCode == 30) {
+        alert = [[UIAlertView alloc] initWithTitle:@"Exceeded Max Groups" 
+                                           message:@"Sorry! You've reached the maximum number of groups you can create" 
+                                          delegate:nil 
+                                 cancelButtonTitle:@"OK"
+                                 otherButtonTitles:nil];
+
+    } else {
+        alert = [[UIAlertView alloc] initWithTitle:@"Error" 
                                                     message:@"Sorry! Unable to connect to server. Try again" 
                                                    delegate:nil 
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
+    }
     [alert show];
 }
 

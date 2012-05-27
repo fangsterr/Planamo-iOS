@@ -12,48 +12,18 @@
 
 /*
  Find (and update) or create or delete groups in core data, based on import groups from server
- 
- Import groups expects array of dictionary in format like (in order of group id):
-    [{
-        id = 5, 
-        name = "New group", 
-        twilioNumberForUser = "+14155992671", 
-        usersInGroup = {
-            user = {
-                firstName = "Stanley",
-                lastName = "Tang",
-                id = 5,
-                phoneNumber = "+16503916950"
-            },
-            isOrganizer = YES
-        },
-        welcomeMessage = "welcome to the group"
-    },
-    etc
- ]
+ Import groups expects array of dictionary (group JSON object)
  */
-+ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 
-/* Creates new group from dictionary, like the format specified in the comments for updateOrCreateOrDeleteGroupsFromArray:withmanagedObjectContext*/
-+ (void)createNewGroupFromDictionary:(NSDictionary *)groupDictionary withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+/* Creates new group from dictionary (group JSON object) */
++ (void)createNewGroupFromDictionary:(NSDictionary *)groupDictionary inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 /*
- Find (and update) or create or delete users in core data, based on import users from server
- 
- Import users expects array of dictionary in format like:
- 
- [
-    {
-    isOrganizer = True;
-    user = {
-        firstName = Andy;
-        lastName = Fang;
-        phoneNumber = "+14082216266";
-    },
-    etc
- ]
+ Find (and update) or create or delete users for group in core data, based on import users from server
+ Import users expects array of dictionary (user JSON object)
  */
-+ (void)updateOrCreateOrDeleteUsersInGroupFromArray:(NSArray *)importUsers forGroup:(Group *)group withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (void)updateOrCreateOrDeleteUsersInGroupFromArray:(NSArray *)importUsers forGroup:(Group *)group onlyUpdate:(BOOL)onlyUpdate inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

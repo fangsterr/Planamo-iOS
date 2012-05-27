@@ -11,7 +11,7 @@
 
 @implementation PlanamoUser (Helper)
 
-+ (PlanamoUser *)currentLoggedInUserWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
++ (PlanamoUser *)currentLoggedInUserInManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     PlanamoUser *loggedInUser = nil;
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"PlanamoUser"];
@@ -35,7 +35,7 @@
     return loggedInUser;
 }
 
-+ (PlanamoUser *)findOrCreateUserWithPhoneNumber:(NSString *)phoneNumber withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
++ (PlanamoUser *)findOrCreateUserWithPhoneNumber:(NSString *)phoneNumber inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     phoneNumber = [AddressBookScanner reformatPhoneNumber:phoneNumber];
     
     PlanamoUser *user = nil;
@@ -47,8 +47,7 @@
     
     if (!userArray || ([userArray count] > 1)) {
         NSLog(@"Error feteching planamo user from core data");
-        user = nil;
-        
+        return nil;
     } else if (![userArray count]) {
         user = [NSEntityDescription insertNewObjectForEntityForName:@"PlanamoUser" inManagedObjectContext:managedObjectContext];
         user.phoneNumber = phoneNumber;

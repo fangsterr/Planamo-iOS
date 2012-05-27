@@ -2,12 +2,12 @@
 //  Group.m
 //  Planamo
 //
-//  Created by Stanley Tang on 12/05/2012.
+//  Created by Stanley Tang on 26/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
 #import "Group.h"
-#import "GroupUserLink.h"
+#import "Message.h"
 
 
 @implementation Group
@@ -15,8 +15,9 @@
 @dynamic id;
 @dynamic lastUpdated;
 @dynamic name;
-@dynamic twilioNumberForUser;
 @dynamic welcomeMessage;
-@dynamic users;
+@dynamic event;
+@dynamic groupUserLinks;
+@dynamic messages;
 
 @end

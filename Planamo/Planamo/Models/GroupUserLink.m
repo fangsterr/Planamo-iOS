@@ -2,7 +2,7 @@
 //  GroupUserLink.m
 //  Planamo
 //
-//  Created by Stanley Tang on 01/05/2012.
+//  Created by Stanley Tang on 26/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 
 @implementation GroupUserLink
 
-@dynamic isOrganizer;
-@dynamic lastUpdated;
+@dynamic isConfirmed;
+@dynamic isMuted;
 @dynamic group;
 @dynamic user;
 

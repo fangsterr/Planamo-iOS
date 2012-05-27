@@ -2,7 +2,7 @@
 //  GroupUserLink.h
 //  Planamo
 //
-//  Created by Stanley Tang on 01/05/2012.
+//  Created by Stanley Tang on 26/05/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 
 @interface GroupUserLink : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * isOrganizer;
-@property (nonatomic, retain) NSDate * lastUpdated;
+@property (nonatomic, retain) NSNumber * isConfirmed;
+@property (nonatomic, retain) NSNumber * isMuted;
 @property (nonatomic, retain) Group *group;
 @property (nonatomic, retain) PlanamoUser *user;
 

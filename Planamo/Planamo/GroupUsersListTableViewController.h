@@ -15,5 +15,8 @@
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) Group *group;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *numUsersLabel;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *addButton;
 
 @end

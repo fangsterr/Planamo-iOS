@@ -1,46 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AddressBookContact" representedClassName="AddressBookContact" syncable="YES">
-        <attribute name="addressBookID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="firstName" attributeType="String" maxValueString="100" syncable="YES"/>
-        <attribute name="lastName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
+        <attribute name="addressBookID" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="firstName" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" maxValueString="50" syncable="YES"/>
         <relationship name="phoneNumbers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PhoneNumber" inverseName="owner" inverseEntity="PhoneNumber" syncable="YES"/>
         <relationship name="planamoUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="addressBookContact" inverseEntity="PlanamoUser" syncable="YES"/>
     </entity>
+    <entity name="Event" representedClassName="Event" syncable="YES">
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startDatetime" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="creator" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" syncable="YES"/>
+        <relationship name="eventUserLinks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EventUserLink" inverseName="event" inverseEntity="EventUserLink" syncable="YES"/>
+        <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="event" inverseEntity="Group" syncable="YES"/>
+    </entity>
+    <entity name="EventUserLink" representedClassName="EventUserLink" syncable="YES">
+        <attribute name="hasRSVPed" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="event" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="eventUserLinks" inverseEntity="Event" syncable="YES"/>
+        <relationship name="user" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="eventUserLinks" inverseEntity="PlanamoUser" syncable="YES"/>
+    </entity>
     <entity name="Group" representedClassName="Group" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="lastUpdated" attributeType="Date" syncable="YES"/>
         <attribute name="name" attributeType="String" maxValueString="100" syncable="YES"/>
-        <attribute name="twilioNumberForUser" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="welcomeMessage" optional="YES" attributeType="String" maxValueString="500" syncable="YES"/>
-        <relationship name="users" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="group" inverseEntity="GroupUserLink" syncable="YES"/>
+        <attribute name="welcomeMessage" attributeType="String" maxValueString="250" syncable="YES"/>
+        <relationship name="event" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Event" inverseName="group" inverseEntity="Event" syncable="YES"/>
+        <relationship name="groupUserLinks" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="group" inverseEntity="GroupUserLink" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Message" inverseName="group" inverseEntity="Message" syncable="YES"/>
     </entity>
     <entity name="GroupUserLink" representedClassName="GroupUserLink" syncable="YES">
-        <attribute name="isOrganizer" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="lastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="users" inverseEntity="Group" syncable="YES"/>
-        <relationship name="user" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="groupsBelongedTo" inverseEntity="PlanamoUser" syncable="YES"/>
+        <attribute name="isConfirmed" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="isMuted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupUserLinks" inverseEntity="Group" syncable="YES"/>
+        <relationship name="user" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="groupUserLinks" inverseEntity="PlanamoUser" syncable="YES"/>
+    </entity>
+    <entity name="Message" representedClassName="Message" syncable="YES">
+        <attribute name="datetimeSent" attributeType="Date" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="isEvent" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="isNotification" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="messageText" attributeType="String" syncable="YES"/>
+        <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="messages" inverseEntity="Group" syncable="YES"/>
+        <relationship name="sender" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" syncable="YES"/>
     </entity>
     <entity name="PhoneNumber" representedClassName="PhoneNumber" syncable="YES">
-        <attribute name="numberAsStringWithFormat" attributeType="String" maxValueString="50" syncable="YES"/>
-        <attribute name="numberAsStringWithoutFormat" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="numberAsStringWithFormat" attributeType="String" maxValueString="20" syncable="YES"/>
+        <attribute name="numberAsStringWithoutFormat" attributeType="String" maxValueString="20" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" maxValueString="50" syncable="YES"/>
         <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AddressBookContact" inverseName="phoneNumbers" inverseEntity="AddressBookContact" syncable="YES"/>
     </entity>
     <entity name="PlanamoUser" representedClassName="PlanamoUser" syncable="YES">
-        <attribute name="firstName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="firstName" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="isLoggedInUser" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="lastName" optional="YES" attributeType="String" maxValueString="100" syncable="YES"/>
-        <attribute name="phoneNumber" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" maxValueString="50" syncable="YES"/>
+        <attribute name="phoneNumber" attributeType="String" maxValueString="20" syncable="YES"/>
         <relationship name="addressBookContact" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AddressBookContact" inverseName="planamoUser" inverseEntity="AddressBookContact" syncable="YES"/>
-        <relationship name="groupsBelongedTo" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="user" inverseEntity="GroupUserLink" syncable="YES"/>
+        <relationship name="eventUserLinks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EventUserLink" inverseName="user" inverseEntity="EventUserLink" syncable="YES"/>
+        <relationship name="groupUserLinks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="user" inverseEntity="GroupUserLink" syncable="YES"/>
     </entity>
     <elements>
         <element name="AddressBookContact" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Group" positionX="160" positionY="192" width="128" height="135"/>
-        <element name="GroupUserLink" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Event" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="EventUserLink" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Group" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="GroupUserLink" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Message" positionX="160" positionY="192" width="128" height="150"/>
         <element name="PhoneNumber" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="PlanamoUser" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="PlanamoUser" positionX="160" positionY="192" width="128" height="165"/>
     </elements>
 </model>

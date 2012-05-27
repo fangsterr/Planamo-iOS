@@ -11,9 +11,9 @@
 @interface PlanamoUser (Helper)
 
 // Get current logged in user on the phone. If none, return nil
-+ (PlanamoUser *)currentLoggedInUserWithManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (PlanamoUser *)currentLoggedInUserInManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 // Find or create planamo user. If error, return nil
-+ (PlanamoUser *)findOrCreateUserWithPhoneNumber:(NSString *)phoneNumber withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (PlanamoUser *)findOrCreateUserWithPhoneNumber:(NSString *)phoneNumber inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

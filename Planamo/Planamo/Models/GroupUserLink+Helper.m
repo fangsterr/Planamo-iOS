@@ -12,7 +12,7 @@
 
 @implementation GroupUserLink (Helper)
 
-+ (GroupUserLink *)findOrCreateGroupUserLinkForUser:(PlanamoUser *)user andGroup:(Group *)group withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
++ (GroupUserLink *)findOrCreateGroupUserLinkForUser:(PlanamoUser *)user andGroup:(Group *)group inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     GroupUserLink *groupUserLink = nil;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GroupUserLink"];
     request.predicate = [NSPredicate predicateWithFormat:@"(group = %@) AND (user = %@)", group, user];

@@ -28,8 +28,16 @@
     }
     
     // Append USA country code - TODO (if internationalized)
-    if ([newPhoneNumber length] == 10) {
-        [newPhoneNumber insertString:@"1" atIndex:0];
+    if ([newPhoneNumber characterAtIndex:0] == '+') {
+        //ignore  
+    } else if ([newPhoneNumber characterAtIndex:0] == '1' &&
+               [newPhoneNumber length] == 11) {
+        [newPhoneNumber insertString:@"+" atIndex:0];
+    } else if ([newPhoneNumber length] == 10) {
+        [newPhoneNumber insertString:@"+1" atIndex:0];
+    } else {
+        // Invalid USA phone number
+        NSLog(@"%@ is an invalid US phone number", phoneNumber);
     }
     
     return [NSString stringWithString:newPhoneNumber];

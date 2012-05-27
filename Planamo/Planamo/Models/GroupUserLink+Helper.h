@@ -11,6 +11,6 @@
 @interface GroupUserLink (Helper)
 
 // Find or create group user link. If error, return nil
-+ (GroupUserLink *)findOrCreateGroupUserLinkForUser:(PlanamoUser *)user andGroup:(Group *)group withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (GroupUserLink *)findOrCreateGroupUserLinkForUser:(PlanamoUser *)user andGroup:(Group *)group inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 @end

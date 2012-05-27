@@ -64,8 +64,6 @@
     [self setFirstNameTextField:nil];
     [self setDoneButton:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -100,7 +98,7 @@
                 NSLog(@"%@", error);
             }
             
-            [self.presentingViewController dismissModalViewControllerAnimated:YES];
+            [self dismissModalViewControllerAnimated:YES];
             
         } else {
             // Otherwise, alert error

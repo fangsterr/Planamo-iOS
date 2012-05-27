@@ -14,6 +14,7 @@
 #import "Group+Helper.h"
 #import "PlanamoUser+Helper.h"
 #import "AddressBookScanner.h"
+#import "CustomNavigationBar.h"
 
 @implementation EnterPinViewController
 
@@ -22,23 +23,6 @@
 @synthesize pinTextField = _pinTextField;
 @synthesize continueButton = _continueButton;
 @synthesize managedObjectContext = _managedObjectContext;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
 
 /**
  Generates unique UUID for device
@@ -51,12 +35,21 @@
     return (__bridge NSString *)string;
 }
 
+#pragma mark - Custom Navigation Bar
+
+-(void)setUpCustomNavigationBar{
+    CustomNavigationBar* customNavigationBar = (CustomNavigationBar*)self.navigationController.navigationBar;
+    UIButton* backButton = [customNavigationBar backButtonWith:[UIImage imageNamed:@"navigationBarBackButton.png"] highlight:nil leftCapWidth:14.0];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    [customNavigationBar setText:@"Back" onBackButton:(UIButton*)self.navigationItem.leftBarButtonItem.customView];
+}
+
 #pragma mark - View lifecycle
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setUpCustomNavigationBar];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -68,6 +61,9 @@
 {
     [self setPinTextField:nil];
     [self setContinueButton:nil];
+    self.rawPhoneNumber = nil;
+    self.currentUser = nil;
+    self.managedObjectContext = nil;
     [super viewDidUnload];
 }
 
@@ -114,7 +110,7 @@
             NSNumber *userID = [NSNumber numberWithInt:[[user valueForKey:@"id"] intValue]];
             NSString *firstName = [user valueForKey:@"firstName"];
             NSString *lastName = [user valueForKey:@"lastName"];
-            self.currentUser = [PlanamoUser findOrCreateUserWithPhoneNumber:self.rawPhoneNumber withManagedObjectContext:self.managedObjectContext];
+            self.currentUser = [PlanamoUser findOrCreateUserWithPhoneNumber:self.rawPhoneNumber inManagedObjectContext:self.managedObjectContext];
             self.currentUser.id = userID;
             if (firstName) self.currentUser.firstName = firstName;
             if (lastName) self.currentUser.lastName = lastName;
@@ -124,7 +120,7 @@
             [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
             
             // Add groups
-            [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"groupsForUser"] withManagedObjectContext:self.managedObjectContext];
+            [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"groupsForUser"] inManagedObjectContext:self.managedObjectContext];
             
             // If name exists, end sign up process
             if (![firstName isEqualToString:@""] && ![lastName isEqualToString:@""]) {

@@ -62,7 +62,7 @@
         // If good, next
         if (!jsonCode || code == 0) {
             // add data
-            [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"objects"] withManagedObjectContext:self.managedObjectContext];
+            [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"objects"] inManagedObjectContext:self.managedObjectContext];
                     
             [self dismissModalViewControllerAnimated:NO];            
         } else {

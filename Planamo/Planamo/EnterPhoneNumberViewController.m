@@ -11,25 +11,16 @@
 #import "MBProgressHUD.h"
 #import "UserActionsWebService.h"
 
-@implementation EnterPhoneNumberViewController
+@implementation EnterPhoneNumberViewController {
+    int _textFieldSemaphore;
+    PhoneNumberFormatter *_phoneNumberFormatter;
+    NSString *_rawPhoneNumber;
+}
 
 @synthesize phoneNumberTextField;
 @synthesize continueButton;
 @synthesize managedObjectContext = _managedObjectContext;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
 
 #pragma mark - Phone Number Formatter
 
@@ -50,7 +41,6 @@
     self.phoneNumberTextField.text = [_phoneNumberFormatter format:self.phoneNumberTextField.text withLocale:@"us"]; //TODO - internationalization
     _textFieldSemaphore = 0;
     
-    // Set enter button to enabled/disabled
     // TODO - internationalization
     if ([_phoneNumberFormatter strip:self.phoneNumberTextField.text].length == 10) {
         [self.continueButton setEnabled:YES];
@@ -58,6 +48,7 @@
         [self.continueButton setEnabled:NO];
     }
 }
+
 
 #pragma mark - View lifecycle
 
@@ -78,6 +69,7 @@
 {
     [self setPhoneNumberTextField:nil];
     [self setContinueButton:nil];
+    self.managedObjectContext = nil;
     [super viewDidUnload];
 }
 
@@ -88,13 +80,13 @@
 }
 
 
-#pragma mark - Button actions
+#pragma mark - Button Action
 
 - (IBAction)continue:(id)sender
 {    
     // Get number and append USA country code - TODO internationalization
     _rawPhoneNumber = [_phoneNumberFormatter strip:self.phoneNumberTextField.text]; 
-    _rawPhoneNumber = [NSString stringWithFormat:@"1%@", _rawPhoneNumber];
+    _rawPhoneNumber = [NSString stringWithFormat:@"+1%@", _rawPhoneNumber];
 
     // Call server
     NSString *functionName = @"createNewMobileUser/";
@@ -132,7 +124,7 @@
     [self.phoneNumberTextField resignFirstResponder];
 }
 
-#pragma mark - Enter Pin View Controller
+#pragma mark - View Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

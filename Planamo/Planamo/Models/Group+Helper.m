@@ -13,7 +13,7 @@
 
 @implementation Group (Helper)
 
-+ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
++ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     NSError *error = nil;
     NSDate *dateStartUpdating = [NSDate date];
     
@@ -26,15 +26,14 @@
         
         // If group doesn't exist, create
         if (![groupArray count]) {
-            [Group createNewGroupFromDictionary:anImportGroup withManagedObjectContext:managedObjectContext];
+            [Group createNewGroupFromDictionary:anImportGroup inManagedObjectContext:managedObjectContext];
         
         // If group exists, update
         } else { 
             currentGroup = [groupArray lastObject];
             currentGroup.name = [anImportGroup valueForKey:@"name"];
-            currentGroup.twilioNumberForUser = [AddressBookScanner reformatPhoneNumber:[anImportGroup valueForKey:@"twilioNumberForUser"]];
             currentGroup.welcomeMessage = [anImportGroup valueForKey:@"welcomeMessage"];
-            [Group updateOrCreateOrDeleteUsersInGroupFromArray:[anImportGroup valueForKey:@"usersInGroup"] forGroup:currentGroup withManagedObjectContext:managedObjectContext];
+            [Group updateOrCreateOrDeleteUsersInGroupFromArray:[anImportGroup valueForKey:@"usersInGroup"] forGroup:currentGroup onlyUpdate:NO inManagedObjectContext:managedObjectContext];
             currentGroup.lastUpdated = [NSDate date];
         }
     }
@@ -53,7 +52,7 @@
     }
 }
 
-+ (void)createNewGroupFromDictionary:(NSDictionary *)groupDictionary withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
++ (void)createNewGroupFromDictionary:(NSDictionary *)groupDictionary inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     // Get users array
     NSArray *usersInGroupArray = [groupDictionary valueForKey:@"usersInGroup"];
     
@@ -71,15 +70,15 @@
         NSString *firstName = [userInfo valueForKey:@"firstName"];
         NSString *lastName = [userInfo valueForKey:@"lastName"];
         NSString *phoneNumber = [userInfo valueForKey:@"phoneNumber"];
-        BOOL isOrganizer = (BOOL)[anUserInGroup valueForKey:@"isOrganizer"];
+        BOOL isOrganizer = [(NSNumber *)[anUserInGroup valueForKey:@"isOrganizer"] boolValue];
         
         // Find or create planamo user
-        PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:phoneNumber withManagedObjectContext:managedObjectContext];
+        PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:phoneNumber inManagedObjectContext:managedObjectContext];
         if (!user.firstName) user.firstName = firstName;
         if (!user.lastName) user.lastName = lastName;
         
         // Create group-user link
-        GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group withManagedObjectContext:managedObjectContext];
+        GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group inManagedObjectContext:managedObjectContext];
         groupUserLink.isOrganizer = [NSNumber numberWithBool:isOrganizer];
     }
     
@@ -91,7 +90,7 @@
 
 }
 
-+ (void)updateOrCreateOrDeleteUsersInGroupFromArray:(NSArray *)importUsers forGroup:(Group *)group withManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
++ (void)updateOrCreateOrDeleteUsersInGroupFromArray:(NSArray *)importUsers forGroup:(Group *)group onlyUpdate:(BOOL)onlyUpdate inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     NSError *error = nil;
     NSDate *dateStartUpdating = [NSDate date];
     
@@ -101,29 +100,31 @@
         NSString *firstName = [userInfo valueForKey:@"firstName"];
         NSString *lastName = [userInfo valueForKey:@"lastName"];
         NSString *phoneNumber = [userInfo valueForKey:@"phoneNumber"];
-        BOOL isOrganizer = (BOOL)[anUserInGroup valueForKey:@"isOrganizer"];
+        BOOL isOrganizer = [(NSNumber *)[anUserInGroup valueForKey:@"isOrganizer"] boolValue];
         
         // Find or create planamo user
-        PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:phoneNumber withManagedObjectContext:managedObjectContext];
+        PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:phoneNumber inManagedObjectContext:managedObjectContext];
         
         // Update planamo user
         user.firstName = firstName;
         user.lastName = lastName;
         
         // Find or create group user link
-        GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group withManagedObjectContext:managedObjectContext];
+        GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group inManagedObjectContext:managedObjectContext];
         
         // Update group user link
         groupUserLink.isOrganizer = [NSNumber numberWithBool:isOrganizer];
         groupUserLink.lastUpdated = [NSDate date];
     }
     
-    // Delete group user links that were not updated
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GroupUserLink"];
-    request.predicate = [NSPredicate predicateWithFormat:@"lastUpdated < %@", dateStartUpdating];
-    NSArray *groupUserLinkArray = [managedObjectContext executeFetchRequest:request error:&error];
-    for (GroupUserLink *groupUserLink in groupUserLinkArray) {
-        [managedObjectContext deleteObject:groupUserLink];
+    if (!onlyUpdate) {
+        // Delete group user links that were not updated
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GroupUserLink"];
+        request.predicate = [NSPredicate predicateWithFormat:@"group.id = %@ AND lastUpdated < %@", group.id, dateStartUpdating];
+        NSArray *groupUserLinkArray = [managedObjectContext executeFetchRequest:request error:&error];
+        for (GroupUserLink *groupUserLink in groupUserLinkArray) {
+            [managedObjectContext deleteObject:groupUserLink];
+        }
     }
     
     // Save

@@ -9,12 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PhoneNumberFormatter.h"
 
-@interface EnterPhoneNumberViewController : UIViewController {
-    @private
-        int _textFieldSemaphore;
-        PhoneNumberFormatter *_phoneNumberFormatter;
-        NSString *_rawPhoneNumber;
-}
+@interface EnterPhoneNumberViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UITextField *phoneNumberTextField;
 @property (strong, nonatomic) IBOutlet UIButton *continueButton;

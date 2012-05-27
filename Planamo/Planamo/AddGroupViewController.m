@@ -15,7 +15,6 @@
 #import "AddContactsViewController.h"
 #import "APIWebService.h"
 #import "MBProgressHUD.h"
-#import "AddressBookScanner.h"
 
 @interface AddGroupViewController ()
 
@@ -25,7 +24,6 @@
 
 @implementation AddGroupViewController
 
-@synthesize delegate = _delegate;
 @synthesize groupNameTextField = _groupNameTextField;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize contactsView = _contactsView;
@@ -61,8 +59,6 @@
     [self.contactsView addSubview:self.addContactsController.view];
     
     self.groupNameTextField.delegate = self;
-    
-    [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -104,7 +100,7 @@
     }
     
     // Add logged in user to users json array
-    PlanamoUser *currentUser = [PlanamoUser currentLoggedInUserWithManagedObjectContext:self.managedObjectContext];
+    PlanamoUser *currentUser = [PlanamoUser currentLoggedInUserInManagedObjectContext:self.managedObjectContext];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:currentUser.firstName, @"firstName", currentUser.lastName, @"lastName", currentUser.phoneNumber, @"phoneNumber", nil];
     NSDictionary *userInGroup = [NSDictionary dictionaryWithObjectsAndKeys:userInfo, @"user", [NSNumber numberWithBool:YES], @"isOrganizer", nil];
     [usersInGroupArray addObject:userInGroup];
@@ -113,7 +109,7 @@
     NSString *groupName = self.groupNameTextField.text;
     
     // Create default welcome message - TODO
-    NSString *welcomeMessage = [NSString stringWithFormat:@"You just got added to the %@ group by @% @% on Planamo. You will receive messages from %@ that are broadcasted to the entire group. However, your replies will only go to %@ and the organizers", groupName, currentUser.firstName, currentUser.lastName, currentUser.firstName, currentUser.firstName];
+    NSString *welcomeMessage = [NSString stringWithFormat:@"You just got added to the %@ group by %@ %@ on Planamo. However, replies will only go to %@ and the organizers", groupName, currentUser.firstName, currentUser.lastName, currentUser.firstName];
     
     // Call server
     NSString *functionName = [NSString stringWithFormat:@"group/"];
@@ -134,8 +130,8 @@
             [newGroupDictionary setObject:groupID forKey:@"id"]; 
             [newGroupDictionary setObject:twilioNumberForUser forKey:@"twilioNumberForUser"];
             
-            [Group createNewGroupFromDictionary:newGroupDictionary withManagedObjectContext:self.managedObjectContext];
-            [self.delegate addGroupViewControllerDidFinish:self];
+            [Group createNewGroupFromDictionary:newGroupDictionary inManagedObjectContext:self.managedObjectContext];
+            [self dismissModalViewControllerAnimated:YES];
             
         } else {
             // Otherwise, alert error
@@ -162,7 +158,7 @@
 
 - (IBAction)cancel:(id)sender
 {
-    [self.delegate addGroupViewControllerDidCancel:self];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Add contacts view

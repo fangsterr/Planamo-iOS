@@ -7,7 +7,7 @@
 //
 
 #import "PlanamoAppDelegate.h"
-#import "GroupsListTableViewController.h"
+#import "RootViewController.h"
 
 @implementation PlanamoAppDelegate
 
@@ -18,10 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Load user's groups list table view
     UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
-    GroupsListTableViewController *groupsController = (GroupsListTableViewController *)navController.topViewController;
-    groupsController.managedObjectContext = self.managedObjectContext;
+    RootViewController *rootController = (RootViewController *)navController.topViewController;
+    NSUndoManager *undoManager = [[NSUndoManager alloc] init];
+    self.managedObjectContext.undoManager = undoManager;
+    rootController.managedObjectContext = self.managedObjectContext;
     
     return YES;
 }
