@@ -111,11 +111,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    CustomNavigationBar* customNavigationBar = (CustomNavigationBar*)self.navigationController.navigationBar;
-    UIButton* backButton = [customNavigationBar backButtonWith:[UIImage imageNamed:@"navigationBarBackButton.png"] highlight:nil leftCapWidth:14.0];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    [customNavigationBar setText:@"Back" onBackButton:(UIButton*)self.navigationItem.leftBarButtonItem.customView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -142,46 +137,16 @@
 
 #pragma mark - IB Actions
 
+-(IBAction)done{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 - (IBAction)setEditMode:(UIBarButtonItem *)sender {
     if (self.editing) {
         [super setEditing:NO animated:YES];
     } else {
         [super setEditing:YES animated:YES];
     } 
-}
-
-#pragma mark - Cell Editing Helper Functions
-
--(BOOL)onlyOneOrganizerLeft {
-    NSArray *groupUserLinkArray = [self.fetchedResultsController fetchedObjects];
-    NSPredicate *organizerPredicate = [NSPredicate predicateWithFormat:@"isOrganizer = %@", [NSNumber numberWithBool:YES]];
-    NSArray *organizerGroupUserLinkArray = [groupUserLinkArray filteredArrayUsingPredicate:organizerPredicate];
-    if ([organizerGroupUserLinkArray count] == 1) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
-- (void)updateOrganizerStatusForCell:(NSIndexPath *)indexPath {
-    GroupUserLink *groupUserLinkSelected = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSNumber *currentOrganizerStatus = groupUserLinkSelected.isOrganizer;
-    
-    [self.managedObjectContext.undoManager beginUndoGrouping];
-    
-    if ([currentOrganizerStatus boolValue]) {
-        groupUserLinkSelected.isOrganizer = [NSNumber numberWithBool:NO];
-    } else {
-        groupUserLinkSelected.isOrganizer = [NSNumber numberWithBool:YES];
-    }
-    
-    [self.managedObjectContext.undoManager endUndoGrouping];
-    
-    // Update data
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:groupUserLinkSelected.user.phoneNumber, @"phoneNumber", groupUserLinkSelected.user.firstName, @"firstName", groupUserLinkSelected.user.lastName, @"lastName", nil];
-    NSDictionary *userInGroup = [NSDictionary dictionaryWithObjectsAndKeys:userInfo, @"user", groupUserLinkSelected.isOrganizer, @"isOrganizer", nil];
-    NSArray *userArray = [NSArray arrayWithObject:userInGroup];
-    [self updateGroup:groupUserLinkSelected.group withUsers:userArray];
 }
 
 #pragma mark - Table View Data Source / Delegate
@@ -198,49 +163,8 @@
     // Configure the cell...
     GroupUserLink *groupUserLink = [self.fetchedResultsController objectAtIndexPath:indexPath];
 	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", groupUserLink.user.firstName, groupUserLink.user.lastName];
-    if ([groupUserLink.isOrganizer boolValue]) {
-        [cell.organizerLabel setHidden:NO];
-    } else {
-        [cell.organizerLabel setHidden:YES];
-    }
     
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if (self.editing) {
-        currentPathEditing = indexPath;
-        GroupUserLink *groupUserLinkSelected = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        NSNumber *currentOrganizerStatus = groupUserLinkSelected.isOrganizer;
-        
-        // If organizer is the logged in user
-        if ([groupUserLinkSelected.user.isLoggedInUser boolValue] &&
-            [currentOrganizerStatus boolValue]) {
-            // If user is only organizer left, cannot remove
-            if ([self onlyOneOrganizerLeft]) {
-                UIAlertView *alert = [[UIAlertView alloc]
-                                      initWithTitle:@"Can't remove organizer status"
-                                      message:@"Sorry. You are the last organizer in the group."
-                                      delegate:self
-                                      cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil];
-                [alert show];
-            
-            // Ask for confirmation
-            } else {
-                UIAlertView *alert = [[UIAlertView alloc]
-                                      initWithTitle:@"Are you sure you want to remove yourself as organizer?"
-                                      message:nil
-                                      delegate:self
-                                      cancelButtonTitle:@"No"
-                                      otherButtonTitles:@"Yes", nil];
-                [alert show];
-            }
-            return;
-        }
-        [self updateOrganizerStatusForCell:indexPath];
-    }
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -280,19 +204,6 @@
  
  **/
 
-#pragma mark - UIAlertView Delegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1) {
-        // Remove from organizer
-        [self updateOrganizerStatusForCell:currentPathEditing];
-    }
-    else {
-        // Don't remove
-    }
-    [self.tableView deselectRowAtIndexPath:currentPathEditing animated:YES]; 
-}
 
 #pragma mark - View Segue Transitions
 

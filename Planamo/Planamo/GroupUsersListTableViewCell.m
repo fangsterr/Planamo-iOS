@@ -10,7 +10,6 @@
 
 @implementation GroupUsersListTableViewCell
 
-@synthesize organizerLabel = _organizerLabel;
 @synthesize nameLabel = _nameLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -31,11 +30,14 @@
 
 
 /* Custom "indentation" of organizer label, to counteract the indentation from editing mode,
-   so it appears that the organizer label doesn't indent */
+   so it appears that the organizer label doesn't indent 
+ 
+    maybe can be used for "YOU" label
+ */
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    if (self.organizerLabel.hidden == NO) {
+  /*  if (self.organizerLabel.hidden == NO) {
         if (self.editing) {
             [UIView animateWithDuration:0.5 animations:^{
                 CGRect frame=self.organizerLabel.frame;
@@ -49,7 +51,7 @@
                 self.organizerLabel.frame=frame;
             }];
         }
-    }
+    } */
 }
 
 

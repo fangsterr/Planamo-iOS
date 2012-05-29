@@ -16,13 +16,65 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 
+#import "GroupMessagesViewController.h"
+#import "Group.h"
+#import "Message.h"
+#import "PlanamoUser+Helper.h"
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
+    
+    
+   /* UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
     RootViewController *rootController = (RootViewController *)navController.topViewController;
     NSUndoManager *undoManager = [[NSUndoManager alloc] init];
     self.managedObjectContext.undoManager = undoManager;
-    rootController.managedObjectContext = self.managedObjectContext;
+    rootController.managedObjectContext = self.managedObjectContext; */
+    
+    
+    /*PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:@"+16503916950" inManagedObjectContext:self.managedObjectContext];
+    user.id = [NSNumber numberWithInt:2];
+    user.firstName = @"stanley";
+    user.lastName = @"tang";
+    
+    Group *group = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:self.managedObjectContext];
+    group.id = [NSNumber numberWithInt:2];
+    group.welcomeMessage = @"welcome";
+    group.name = @"the bro group";
+    group.lastUpdated = [NSDate date];
+    
+    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
+    message.id = [NSNumber numberWithInt:2];
+    message.datetimeSent = [NSDate date];
+    message.isEvent = [NSNumber numberWithBool:NO];
+    message.isNotification = [NSNumber numberWithBool:NO];
+    message.messageText = @"hey, guys do any of you wanna grab some delicious lunch tongiht? It's gonna be awesome and epic";
+    message.group = group;
+    message.sender = user;
+    
+    // Save
+    NSError *error = nil;
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"%@", error);
+    }*/
+    
+    
+    
+    Group *group = nil;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
+    request.predicate = [NSPredicate predicateWithFormat:@"id = %@", [NSNumber numberWithInt:2]];
+    
+    NSError *error = nil;
+    NSArray *userArray = [self.managedObjectContext executeFetchRequest:request error:&error];
+    
+    group = [userArray lastObject];
+    
+    PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:@"+16503916950" inManagedObjectContext:self.managedObjectContext];
+
+    UINavigationController *navController = (UINavigationController *)self.window.rootViewController;
+    GroupMessagesViewController *gvc = (GroupMessagesViewController *)navController.topViewController;
+    gvc.managedObjectContext = self.managedObjectContext;
+    gvc.group = group;
     
     return YES;
 }

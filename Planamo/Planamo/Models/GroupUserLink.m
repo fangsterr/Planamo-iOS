@@ -17,5 +17,6 @@
 @dynamic isMuted;
 @dynamic group;
 @dynamic user;
+@dynamic lastUpdated;
 
 @end

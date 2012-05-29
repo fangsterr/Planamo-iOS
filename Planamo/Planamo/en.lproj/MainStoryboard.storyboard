@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.0" toolsVersion="1938" systemVersion="10K549" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Qmr-co-Xm3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.0" toolsVersion="1938" systemVersion="10K549" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="LgT-6e-hL3">
     <dependencies>
         <development defaultVersion="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="933"/>
@@ -31,9 +31,6 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <connections>
-                                    <segue destination="Qmr-co-Xm3" kind="push" identifier="groupMessages" id="tNw-tn-HQJ"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -49,64 +46,118 @@
         <scene sceneID="dGP-kf-Hsy">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="krZ-RR-zn4" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="Qmr-co-Xm3" customClass="GroupMessagesTableViewController" sceneMemberID="viewController">
+                <viewController id="Qmr-co-Xm3" customClass="GroupMessagesViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gsK-eL-eGy">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="KvX-jY-zP6">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="375"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" id="KvX-jY-zP6">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="376"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="F9F-DG-CUo">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GroupMessagesCell" id="F9F-DG-CUo" customClass="GroupMessagesTableViewCell">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="Stanley Tang" lineBreakMode="tailTruncation" minimumFontSize="14" id="j2V-MX-OUA">
+                                                    <rect key="frame" x="7" y="2" width="244" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="left" text="Let's grab lunch" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" minimumFontSize="10" id="V9J-lO-Ef1">
+                                                    <rect key="frame" x="7" y="24" width="270" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" text="Date" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="10" id="KgA-Dg-QGN">
+                                                    <rect key="frame" x="245" y="3" width="68" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" red="0.32026834414826444" green="0.567112606928175" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="dateLabel" destination="KgA-Dg-QGN" id="bK1-zv-5Kl"/>
+                                            <outlet property="messageLabel" destination="V9J-lO-Ef1" id="2eM-jT-sUe"/>
+                                            <outlet property="nameLabel" destination="j2V-MX-OUA" id="niV-C0-AJc"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="Qmr-co-Xm3" id="Xth-6W-d4A"/>
+                                    <outlet property="delegate" destination="Qmr-co-Xm3" id="ARc-dW-Jb0"/>
+                                </connections>
                             </tableView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="ChatBar.png" id="RdK-Qx-28j">
-                                <rect key="frame" x="0.0" y="376" width="320" height="40"/>
+                            <view contentMode="scaleToFill" id="sRd-lb-dCw">
+                                <rect key="frame" x="0.0" y="419" width="320" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="4jM-nw-umS">
-                                <rect key="frame" x="245" y="383" width="64" height="26"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <textView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" text="a" id="x6d-1W-Za4">
-                                <rect key="frame" x="20" y="388" width="200" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <inset key="scrollIndicatorInsets" minX="4" minY="0.0" maxX="-2" maxY="0.0"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="gzy-aa-XRQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4jM-nw-umS">
+                                        <rect key="frame" x="251" y="8" width="69" height="27"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Send" backgroundImage="MessageEntrySendButton.png">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" image="MessageEntrySendButton.png" backgroundImage="MessageEntrySendButton.png"/>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="sendMessage" destination="Qmr-co-Xm3" eventType="touchUpInside" id="Qbx-pu-7rn"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" id="dSN-nH-FUF" customClass="HPGrowingTextView">
+                                        <rect key="frame" x="6" y="3" width="240" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    </view>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="uAb-i0-K8Z">
+                                        <rect key="frame" x="5" y="0.0" width="248" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Wot-Nz-BXp">
                         <barButtonItem key="rightBarButtonItem" title="Settings" id="44p-ZM-xBx">
                             <connections>
-                                <segue destination="Yje-p7-USh" kind="modal" identifier="groupUsersList" id="09r-3R-OUb"/>
+                                <segue destination="Yje-p7-USh" kind="modal" identifier="groupUsersList" modalTransitionStyle="flipHorizontal" id="09r-3R-OUb"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="messageBarBackground" destination="gzy-aa-XRQ" id="A7r-fo-IHp"/>
+                        <outlet property="messageBarView" destination="sRd-lb-dCw" id="RHP-9O-RFT"/>
+                        <outlet property="messagesInputBoxBackground" destination="uAb-i0-K8Z" id="ht4-Xu-iHm"/>
+                        <outlet property="messagesInputBoxTextView" destination="dSN-nH-FUF" id="zO1-zr-Svu"/>
+                        <outlet property="messagesTableView" destination="KvX-jY-zP6" id="59n-QV-7iQ"/>
+                        <outlet property="sendButton" destination="4jM-nw-umS" id="EXY-Jd-dsj"/>
+                    </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="394" y="509"/>
+            <point key="canvasLocation" x="920" y="509"/>
         </scene>
         <scene sceneID="h0Q-Rd-gTI">
             <objects>
@@ -124,13 +175,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Organizer" lineBreakMode="tailTruncation" minimumFontSize="10" id="l9E-US-K4b">
-                                            <rect key="frame" x="251" y="11" width="69" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
-                                            <color key="textColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" minimumFontSize="10" id="nlX-dy-fCx">
                                             <rect key="frame" x="10" y="11" width="228" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -143,7 +187,6 @@
                                 </view>
                                 <connections>
                                     <outlet property="nameLabel" destination="nlX-dy-fCx" id="sVh-Xf-NsR"/>
-                                    <outlet property="organizerLabel" destination="l9E-US-K4b" id="cBb-Pc-6e3"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -167,7 +210,13 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="l9v-TG-pLX"/>
+                    <navigationItem key="navigationItem" id="l9v-TG-pLX">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="xdh-eO-3GM">
+                            <connections>
+                                <action selector="done" destination="pgv-Sl-1PH" id="7xv-Yz-9Jx"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="addButton" destination="4zD-by-Ogg" id="0ML-NB-K3W"/>
@@ -176,7 +225,7 @@
                     </connections>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="1349" y="843"/>
+            <point key="canvasLocation" x="1875" y="843"/>
         </scene>
         <scene sceneID="Gmz-WM-sDC">
             <objects>
@@ -408,7 +457,7 @@
                     </navigationItem>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="2208" y="843"/>
+            <point key="canvasLocation" x="2734" y="843"/>
         </scene>
         <scene sceneID="wi2-sm-CDI">
             <objects>
@@ -593,7 +642,7 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="1803" y="843"/>
+            <point key="canvasLocation" x="2329" y="843"/>
         </scene>
         <scene sceneID="vNI-Vj-cd1">
             <objects>
@@ -634,12 +683,29 @@
                     </connections>
                 </navigationController>
             </objects>
-            <point key="canvasLocation" x="906" y="843"/>
+            <point key="canvasLocation" x="1432" y="843"/>
+        </scene>
+        <scene sceneID="cLu-1X-jgM">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yaT-79-qMF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController id="LgT-6e-hL3" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="b5X-Gq-jEj">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Qmr-co-Xm3" kind="relationship" relationship="rootViewController" id="Zeo-1u-9M7"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="394" y="509"/>
         </scene>
     </scenes>
     <resources>
-        <image name="ChatBar.png" width="320" height="40"/>
         <image name="Default.png" width="320" height="480"/>
+        <image name="MessageEntrySendButton.png" width="27" height="27"/>
         <image name="addTabButton.png" width="72" height="49"/>
         <image name="feedTabButton.png" width="120" height="50"/>
         <image name="feedTabButtonIcon.png" width="16" height="16"/>
@@ -701,19 +767,36 @@
         <class className="FeedViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedViewController.h"/>
         </class>
-        <class className="GroupMessagesTableViewController" superclassName="CoreDataTableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupMessagesTableViewController.h"/>
+        <class className="GroupMessagesTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupMessagesTableViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="dateLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="messageLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="nameLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="GroupMessagesViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupMessagesViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="sendMessage"/>
+                <relationship kind="outlet" name="messageBarBackground" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="messageBarView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="messagesInputBoxBackground" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="messagesInputBoxTextView" candidateClass="HPGrowingTextView"/>
+                <relationship kind="outlet" name="messagesTableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="sendButton" candidateClass="UIButton"/>
+            </relationships>
         </class>
         <class className="GroupUsersListTableViewCell" superclassName="UITableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupUsersListTableViewCell.h"/>
             <relationships>
                 <relationship kind="outlet" name="nameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="organizerLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
         <class className="GroupUsersListTableViewController" superclassName="CoreDataTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupUsersListTableViewController.h"/>
             <relationships>
+                <relationship kind="action" name="done"/>
                 <relationship kind="outlet" name="addButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="editButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="numUsersLabel" candidateClass="UIBarButtonItem"/>
@@ -721,6 +804,9 @@
         </class>
         <class className="GroupsListTableViewController" superclassName="CoreDataTableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GroupsListTableViewController.h"/>
+        </class>
+        <class className="HPGrowingTextView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HPGrowingTextView.h"/>
         </class>
         <class className="LaunchScreenViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LaunchScreenViewController.h"/>

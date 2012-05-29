@@ -33,7 +33,7 @@
             currentGroup = [groupArray lastObject];
             currentGroup.name = [anImportGroup valueForKey:@"name"];
             currentGroup.welcomeMessage = [anImportGroup valueForKey:@"welcomeMessage"];
-            [Group updateOrCreateOrDeleteUsersInGroupFromArray:[anImportGroup valueForKey:@"usersInGroup"] forGroup:currentGroup onlyUpdate:NO inManagedObjectContext:managedObjectContext];
+            [Group updateOrCreateOrDeleteUsersInGroupFromArray:[anImportGroup valueForKey:@"users"] forGroup:currentGroup onlyUpdate:NO inManagedObjectContext:managedObjectContext];
             currentGroup.lastUpdated = [NSDate date];
         }
     }
@@ -61,7 +61,6 @@
     group.name = [groupDictionary valueForKey:@"name"];
     group.id = [NSNumber numberWithInt:[[groupDictionary valueForKey:@"id"] intValue]];
     group.lastUpdated = [NSDate date];
-    group.twilioNumberForUser = [groupDictionary valueForKey:@"twilioNumberForUser"];
     group.welcomeMessage = [groupDictionary valueForKey:@"welcomeMessage"];
     
     // Create users + links
@@ -79,7 +78,6 @@
         
         // Create group-user link
         GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group inManagedObjectContext:managedObjectContext];
-        groupUserLink.isOrganizer = [NSNumber numberWithBool:isOrganizer];
     }
     
     // Save
@@ -113,7 +111,6 @@
         GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group inManagedObjectContext:managedObjectContext];
         
         // Update group user link
-        groupUserLink.isOrganizer = [NSNumber numberWithBool:isOrganizer];
         groupUserLink.lastUpdated = [NSDate date];
     }
     

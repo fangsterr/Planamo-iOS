@@ -10,7 +10,6 @@
 
 @interface GroupUsersListTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) IBOutlet UILabel *organizerLabel; //TODO - make this image
 @property (nonatomic, strong) IBOutlet UILabel *nameLabel;
 
 @end

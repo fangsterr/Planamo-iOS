@@ -27,12 +27,13 @@
         <attribute name="name" attributeType="String" maxValueString="100" syncable="YES"/>
         <attribute name="welcomeMessage" attributeType="String" maxValueString="250" syncable="YES"/>
         <relationship name="event" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="Event" inverseName="group" inverseEntity="Event" syncable="YES"/>
-        <relationship name="groupUserLinks" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="group" inverseEntity="GroupUserLink" syncable="YES"/>
+        <relationship name="groupUserLinks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GroupUserLink" inverseName="group" inverseEntity="GroupUserLink" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Message" inverseName="group" inverseEntity="Message" syncable="YES"/>
     </entity>
     <entity name="GroupUserLink" representedClassName="GroupUserLink" syncable="YES">
         <attribute name="isConfirmed" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="isMuted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="lastUpdated" attributeType="Date" syncable="YES"/>
         <relationship name="group" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupUserLinks" inverseEntity="Group" syncable="YES"/>
         <relationship name="user" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="groupUserLinks" inverseEntity="PlanamoUser" syncable="YES"/>
     </entity>

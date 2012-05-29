@@ -17,5 +17,6 @@
 @property (nonatomic, retain) NSNumber * isMuted;
 @property (nonatomic, retain) Group *group;
 @property (nonatomic, retain) PlanamoUser *user;
+@property (nonatomic, retain) NSDate * lastUpdated;
 
 @end

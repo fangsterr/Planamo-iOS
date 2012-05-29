@@ -19,4 +19,6 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addButton;
 
+-(IBAction)done;
+
 @end
