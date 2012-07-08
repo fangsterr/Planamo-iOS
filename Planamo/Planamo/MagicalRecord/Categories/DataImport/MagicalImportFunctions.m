@@ -39,7 +39,7 @@ NSDate * dateFromString(NSString *value, NSString *format)
     [formatter setDateFormat:format];
     
     NSDate *parsedDate = [formatter dateFromString:value];
-    
+        
     return parsedDate;
 }
 

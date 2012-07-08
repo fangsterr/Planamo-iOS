@@ -8,69 +8,20 @@
 
 #import "AddContactsViewController.h"
 #import "AddressBookScanner.h"
-#import "APIWebService.h"
+#import "WebService.h"
 #import "PhoneNumber.h"
 #import "AddressBookContact.h"
 #import "MBProgressHUD.h"
 #import "Group+Helper.h"
+#import "NSManagedObjectContext+PatchedMagicalRecord.h"
+#import "PlanamoUser+Helper.h"
 
 @implementation AddContactsViewController
 
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize tokenField = _tokenField;
 @synthesize group = _group;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-#pragma mark - View lifecycle
-
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)viewDidLoad
-{
-    self.tokenField.managedObjectContext = self.managedObjectContext;
-    self.tokenField.labelText = @"Who:";
-    [self.tokenField becomeFirstResponder];
-    if (!_group) self.view = self.tokenField; // Group creation (view goes in AddGroupViewController)
-    else [self.view addSubview:self.tokenField]; // Adding contacts
-    [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
-}
-
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
-}
-
-#pragma mark - IB Actions
-
--(IBAction)done {
-    // Call server
-    NSString *functionName = [NSString stringWithFormat:@"group/%@/", self.group.id];
-    
+- (NSMutableArray *)convertUserTokensIntoUsersArray {
     // Convert user tokens into json array
     NSMutableArray *newUsersArray = [[NSMutableArray alloc] init];
     NSArray *contactsTokenArray = self.tokenField.tokens;
@@ -78,16 +29,38 @@
         NSString *firstName = ((PhoneNumber *)token.object).owner.firstName;
         NSString *lastName = ((PhoneNumber *)token.object).owner.lastName;
         NSString *phoneNumber = ((PhoneNumber*)token.object).numberAsStringWithoutFormat;
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:firstName, @"firstName", lastName, @"lastName", phoneNumber, @"phoneNumber", nil];
-        NSDictionary *userInGroup = [NSDictionary dictionaryWithObjectsAndKeys:userInfo, @"user", [NSNumber numberWithBool:NO], @"isOrganizer", nil];
-        [newUsersArray addObject:userInGroup];
+        if ([phoneNumber isEqualToString:[PlanamoUser currentLoggedInUser].phoneNumber]) continue;
+        NSDictionary *userData = [NSDictionary dictionaryWithObjectsAndKeys:firstName, @"firstName", lastName, @"lastName", phoneNumber, @"phoneNumber", nil];
+        [newUsersArray addObject:userData];
     }
+
+    return newUsersArray;
+}
+
+#pragma mark - View lifecycle
+
+- (void)viewDidLoad
+{
+    self.tokenField.managedObjectContext = [NSManagedObjectContext MR_defaultContext]; // TODO
+    self.tokenField.labelText = @"Who:";
+    [self.tokenField becomeFirstResponder];
+    if (!_group) self.view = self.tokenField; // Group creation (view goes in AddGroupViewController)
+    else [self.view addSubview:self.tokenField]; // Adding contacts
+    [AddressBookScanner scanAddressBook];
+}
+
+
+#pragma mark - IB Actions
+
+-(IBAction)done {
+    // Call server
+    NSString *functionName = [NSString stringWithFormat:@"api/group/%@/users/", self.group.id];
+    NSArray *usersArray = [self convertUserTokensIntoUsersArray];
+    NSDictionary *updatedGroupUsersDictionary = [NSDictionary dictionaryWithObjectsAndKeys:usersArray, @"users", nil];
     
-    NSDictionary *updatedGroupDictionary = [NSDictionary dictionaryWithObjectsAndKeys: newUsersArray, @"usersInGroup", nil];
+    NSLog(@"Calling PUT %@, jsonData: %@", functionName, updatedGroupUsersDictionary);
     
-    NSLog(@"Calling API - PUT api/%@, jsonData: %@", functionName, updatedGroupDictionary);
-    
-    [[APIWebService sharedWebService] putPath:functionName parameters:updatedGroupDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+    [[WebService sharedWebService] putPath:functionName parameters:updatedGroupUsersDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
         NSLog(@"PUT %@ return: %@", functionName, JSON);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
@@ -95,13 +68,15 @@
         
         // If good, save
         if (code == 0) {
-            [Group updateOrCreateOrDeleteUsersInGroupFromArray:newUsersArray forGroup:self.group onlyUpdate:YES inManagedObjectContext:self.managedObjectContext];
-            
-            [self dismissModalViewControllerAnimated:YES];
-            
+           
+            [self dismissViewControllerAnimated:YES completion:^{
+                [self.group addUsersToGroup:[JSON valueForKeyPath:@"users"]];
+                [[NSManagedObjectContext MR_defaultContext] MR_save];
+            }];
+
         } else {
             // Otherwise, alert error and undo changes
-            [[APIWebService sharedWebService] showAlertWithErrorCode:code];
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
             [self.tokenField becomeFirstResponder];
         }
         
@@ -109,7 +84,7 @@
         NSLog(@"Error: %@", error);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
-        [[APIWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];
         [self.tokenField becomeFirstResponder];
     }];
     

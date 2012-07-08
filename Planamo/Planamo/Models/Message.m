@@ -2,7 +2,7 @@
 //  Message.m
 //  Planamo
 //
-//  Created by Stanley Tang on 26/05/2012.
+//  Created by Stanley Tang on 02/07/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -15,7 +15,6 @@
 
 @dynamic datetimeSent;
 @dynamic id;
-@dynamic isEvent;
 @dynamic isNotification;
 @dynamic messageText;
 @dynamic group;

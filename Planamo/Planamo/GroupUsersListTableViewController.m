@@ -8,79 +8,89 @@
 
 #import "GroupUsersListTableViewController.h"
 
-#import "GroupUserLink.h"
-#import "PlanamoUser.h"
+#import "PlanamoUser+Helper.h"
 #import "GroupUsersListTableViewCell.h"
 #import "MBProgressHUD.h"
-#import "APIWebService.h"
+#import "WebService.h"
 #import "AddContactsViewController.h"
-#import "CustomNavigationBar.h"
 
 @implementation GroupUsersListTableViewController {
     NSIndexPath * currentPathEditing;
 }
 
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize group = _group;
 @synthesize numUsersLabel = _numUsersLabel;
 @synthesize editButton = _editButton;
 @synthesize addButton = _addButton;
+@synthesize delegate = _delegate;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+-(void)displayNumOfUsersLabel {
+    NSArray *groupUsersArray = [self.fetchedResultsController fetchedObjects];
+    NSUInteger numberOfUsersInGroup = [groupUsersArray count];
+    if (numberOfUsersInGroup == 1) {
+        self.numUsersLabel.title = [NSString stringWithFormat:@"%d member", numberOfUsersInGroup];
+    } else {
+        self.numUsersLabel.title = [NSString stringWithFormat:@"%d members", numberOfUsersInGroup];
     }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
 }
 
 #pragma mark - Server Calls
 
-- (void)updateGroup:(Group *)group withUsers:(NSArray *)users {
+-(void)deleteUserFromGroup:(PlanamoUser *)userToDelete {
     // Call server
-    NSString *functionName = [NSString stringWithFormat:@"group/%@/", group.id];
+    NSString *functionName = [NSString stringWithFormat:@"api/group/%@/users/%@/", self.group.id, userToDelete.id];
     
-    NSDictionary *updatedGroupDictionary = [NSDictionary dictionaryWithObjectsAndKeys: users, @"usersInGroup", nil];
+    NSLog(@"Calling DELETE %@", functionName);
     
-    NSLog(@"Calling API - PUT api/%@, jsonData: %@", functionName, updatedGroupDictionary);
-    
-    [[APIWebService sharedWebService] putPath:functionName parameters:updatedGroupDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
-        NSLog(@"PUT %@ return: %@", functionName, JSON);
+    [[WebService sharedWebService] deletePath:functionName parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"DELETE %@ return: %@", functionName, JSON);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
         int code = [[JSON valueForKeyPath:@"code"] intValue];
         
-        // If good, save
-        if (code == 0) {
-            NSError *error = nil;
-            if (![self.managedObjectContext save:&error]) {
-                NSLog(@"%@", error);
-            }
+        // If good, delete user locally
+        if (code == 0) {            
             
+            // If user is logged in user, remove group, then go back to home screen
+            if ([userToDelete.id isEqualToNumber:[PlanamoUser currentLoggedInUser].id]) {
+                [self.group MR_deleteEntity];
+                [[NSManagedObjectContext MR_defaultContext] MR_save];
+                [self dismissViewControllerAnimated:YES completion:^{
+                    [self.delegate lastUserInGroupDidGetDeleted];
+                }];
+            } else {
+                // Otherwise, just remove user from group
+                [userToDelete removeGroupsObject:self.group];
+                [[NSManagedObjectContext MR_defaultContext] MR_save];
+            }
+                        
         } else {
-            // Otherwise, alert error and undo changes
-            [[APIWebService sharedWebService] showAlertWithErrorCode:code];
-            [self.managedObjectContext undo];
+            // Otherwise, alert error
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
-        [[APIWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];
     }];
     
     // Add progress indicator
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.labelText = @"Updating user...";
+    hud.labelText = @"Deleting user...";
 }
 
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        // Delete user from group
+        PlanamoUser *userToDelete = [self.fetchedResultsController objectAtIndexPath:currentPathEditing];
+        [self deleteUserFromGroup:userToDelete];
+    } else {
+         // Cancelled. Do nothing
+    }
+}
 
 #pragma mark - Fetched Results Controller
 
@@ -88,26 +98,19 @@
  Create fetch request with Groups entity. Create fetched results controller and attach to this table view controller
  */
 - (void)setupFetchedResultsController {
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    fetchRequest.entity = [NSEntityDescription entityForName:@"GroupUserLink" inManagedObjectContext:self.managedObjectContext];
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"group.id = %@", self.group.id];
-    fetchRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"user.firstName" ascending:YES]];
+    NSFetchRequest *fetchRequest = [PlanamoUser MR_requestAllSortedBy:@"firstName" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"ANY groups.id = %@", self.group.id]];
     
     // Create and initialize fech results controller
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil]; //TODO - section name key path, cache name
-    self.fetchedResultsController = aFetchedResultsController;
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[NSManagedObjectContext MR_defaultContext] sectionNameKeyPath:nil cacheName:nil]; //TODO - section name key path, cache name
+}
+
+-(void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [super controllerDidChangeContent:controller];
+    [self displayNumOfUsersLabel];
 }
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -117,14 +120,7 @@
     [super viewWillAppear:animated];
     [self setupFetchedResultsController];
     self.title = self.group.name;
-    
-    NSArray *groupUserLinkArray = [self.fetchedResultsController fetchedObjects];
-    NSUInteger numberOfUsersInGroup = [groupUserLinkArray count];
-    if (numberOfUsersInGroup == 1) {
-        self.numUsersLabel.title = [NSString stringWithFormat:@"%d member", numberOfUsersInGroup];
-    } else {
-        self.numUsersLabel.title = [NSString stringWithFormat:@"%d members", numberOfUsersInGroup];
-    }
+    [self displayNumOfUsersLabel];
 }
 
 - (void)viewDidUnload
@@ -161,24 +157,31 @@
     }
     
     // Configure the cell...
-    GroupUserLink *groupUserLink = [self.fetchedResultsController objectAtIndexPath:indexPath];
-	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", groupUserLink.user.firstName, groupUserLink.user.lastName];
+    PlanamoUser *user = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	cell.nameLabel.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	//GroupUserLink *groupUserLinkDeleted = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    currentPathEditing = indexPath;
+	PlanamoUser *userToDelete = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSString *alertTitle = nil;
+    
+    if ([userToDelete.isLoggedInUser isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+        alertTitle = [NSString stringWithFormat:@"Are you sure you want to remove yourself from the group?"];
+    } else {
+        alertTitle = [NSString stringWithFormat:@"Are you sure you want to remove %@ %@ from the group?", userToDelete.firstName, userToDelete.lastName];
+    }
+    
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Not Working" 
-                                                        message:@"We haven't implemented delete yet. Coming soon!" 
-                                                       delegate:nil 
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle 
+                                                        message:@"You cannot undo this."
+                                                       delegate:self
+                                              cancelButtonTitle:@"Yes"
+                                              otherButtonTitles:@"No", nil];
         [alert show];
-        
-        // TODO - get delete user working. Need to implement NSFetchedResultsController Delegate
     }
 }
 
@@ -212,7 +215,6 @@
     if ([[segue identifier] isEqualToString:@"addContacts"]) {
         UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
         AddContactsViewController *addContactsController = (AddContactsViewController *)navController.topViewController;
-        addContactsController.managedObjectContext = self.managedObjectContext;
         addContactsController.tokenField = [[ContactsTokenField alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
         addContactsController.group = self.group;
     }

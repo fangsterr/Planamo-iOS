@@ -13,6 +13,7 @@
 - (NSAttributeDescription *) MR_primaryAttributeToRelateBy;
 {
     NSString *lookupKey = [[self userInfo] valueForKey:kMagicalRecordImportRelationshipLinkedByKey] ?: primaryKeyNameFromString([self name]);
+        
     NSDictionary *attributesByName = [self attributesByName];
                                     
     if ([attributesByName count] == 0) return nil;

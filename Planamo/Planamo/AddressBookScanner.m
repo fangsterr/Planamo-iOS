@@ -43,8 +43,13 @@
     return [NSString stringWithString:newPhoneNumber];
 }
 
++ (void)scanAddressBook {
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    [self scanAddressBookInContext:localContext];
+}
+
 // TODO - ask user permission, sync with server, address book mutliple contact selector
-+ (void)scanAddressBookWithManagedContext:(NSManagedObjectContext *)managedObjectContext
++ (void)scanAddressBookInContext:(NSManagedObjectContext *)localContext
 {
     // Retrive last the address book was scanned
     NSDate* lastScanned = [[NSUserDefaults standardUserDefaults] objectForKey:@"AddressBookLastScannedDate"];
@@ -93,29 +98,16 @@
         NSNumber *addressBookID = [NSNumber numberWithInt:ABRecordGetRecordID(person)]; 
         
         // Find if duplicate contact exists in Core Data
-        AddressBookContact *contact = nil;
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"AddressBookContact"];
-        request.predicate = [NSPredicate predicateWithFormat:@"addressBookID = %@", addressBookID];
-        
-        NSError *error = nil;
-        NSArray *contacts = [managedObjectContext executeFetchRequest:request error:&error];
-        
-        if (!contacts || ([contacts count] > 1)) {
-            NSLog(@"Error feteching contacts from core data when scanning addres book");
-        } else if (![contacts count]) {
-            contact = [NSEntityDescription insertNewObjectForEntityForName:@"AddressBookContact" inManagedObjectContext:managedObjectContext];
-            contact.addressBookID = addressBookID;
-        } else {
-            contact = [contacts lastObject];
-        }
-        
+        AddressBookContact *contact = [AddressBookContact MR_findFirstByAttribute:@"addressBookID" withValue:addressBookID inContext:localContext];
+        if (!contact) contact = [AddressBookContact MR_createInContext:localContext];
+                
         // Update name
         contact.firstName = firstName;
         contact.lastName = lastName;
         
         // Delete existing phone numbers
         for (PhoneNumber *number in contact.phoneNumbers) {
-            [managedObjectContext deleteObject:number];
+            [number MR_deleteInContext:localContext];
         }
         
         // Add new phone numbers
@@ -129,7 +121,7 @@
             CFStringRef phoneNumberLocalizedLabel = ABAddressBookCopyLocalizedLabel(phoneNumberLabel);    // converts "_$!<Work>!$_" to "work" and "_$!<Mobile>!$_" to "mobile"
             
             //Save phone number
-            PhoneNumber *phoneNumber = [NSEntityDescription insertNewObjectForEntityForName:@"PhoneNumber" inManagedObjectContext:managedObjectContext];
+            PhoneNumber *phoneNumber = [PhoneNumber MR_createInContext:localContext];
             phoneNumber.numberAsStringWithFormat = (__bridge NSString *)phoneNumberValue;
             phoneNumber.numberAsStringWithoutFormat = [self reformatPhoneNumber:(__bridge NSString *)phoneNumberValue];
             phoneNumber.type = (__bridge NSString *)phoneNumberLocalizedLabel;
@@ -143,11 +135,6 @@
         }
         CFRelease(phoneNumbers);
         CFRelease(person);
-    }
-    
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        NSLog(@"%@", error);
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:@"AddressBookLastScannedDate"];

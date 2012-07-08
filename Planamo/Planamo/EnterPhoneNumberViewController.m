@@ -9,7 +9,8 @@
 #import "EnterPhoneNumberViewController.h"
 #import "EnterPinViewController.h"
 #import "MBProgressHUD.h"
-#import "UserActionsWebService.h"
+#import "WebService.h"
+#import "PhoneNumberFormatter.h"
 
 @implementation EnterPhoneNumberViewController {
     int _textFieldSemaphore;
@@ -19,8 +20,6 @@
 
 @synthesize phoneNumberTextField;
 @synthesize continueButton;
-@synthesize managedObjectContext = _managedObjectContext;
-
 
 #pragma mark - Phone Number Formatter
 
@@ -52,7 +51,6 @@
 
 #pragma mark - View lifecycle
 
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -69,14 +67,7 @@
 {
     [self setPhoneNumberTextField:nil];
     [self setContinueButton:nil];
-    self.managedObjectContext = nil;
     [super viewDidUnload];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
 }
 
 
@@ -87,25 +78,28 @@
     // Get number and append USA country code - TODO internationalization
     _rawPhoneNumber = [_phoneNumberFormatter strip:self.phoneNumberTextField.text]; 
     _rawPhoneNumber = [NSString stringWithFormat:@"+1%@", _rawPhoneNumber];
+    
+    // TODO - debug
+    [self performSegueWithIdentifier:@"enterPin" sender:self];
+    return;
 
     // Call server
-    NSString *functionName = @"createNewMobileUser/";
+    NSString *functionName = @"accounts/createNewMobileUser/";
     NSDictionary *phoneNumberDictionary = [NSDictionary dictionaryWithObjectsAndKeys:_rawPhoneNumber, @"phoneNumber", @"j0d1eCHILLBE4R", @"secretCode", nil];
     
-    NSLog(@"Calling user action - url:accounts/%@, jsonData: %@", functionName, phoneNumberDictionary);
+    NSLog(@"Calling - POST %@, jsonData: %@", functionName, phoneNumberDictionary);
     
-    [[UserActionsWebService sharedWebService] postPath:functionName parameters:phoneNumberDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
-        NSLog(@"createNewMobileUser return: %@", JSON);
+    [[WebService sharedWebService] postPath:functionName parameters:phoneNumberDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"%@ return: %@", functionName, JSON);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
         int code = [[JSON valueForKeyPath:@"code"] intValue];
         
-        // If good, next
-        if (code == 0) {
+        if (code == 0) { // If good, next
             [self performSegueWithIdentifier:@"enterPin" sender:self];
-        } else {
-            // Otherwise, alert error
-            [[UserActionsWebService sharedWebService] showAlertWithErrorCode:code];
+        
+        } else { //Otherwise, alert error
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
             [self.phoneNumberTextField becomeFirstResponder];
         }
         
@@ -113,7 +107,7 @@
         NSLog(@"Error: %@", error);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
-        [[UserActionsWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];
         [self.phoneNumberTextField becomeFirstResponder];
     }];
     
@@ -131,7 +125,6 @@
     if ([[segue identifier] isEqualToString:@"enterPin"]) {
         EnterPinViewController *enterPinController = (EnterPinViewController *)[segue destinationViewController];
         enterPinController.rawPhoneNumber = _rawPhoneNumber;
-        enterPinController.managedObjectContext = self.managedObjectContext;
     }
 }
 

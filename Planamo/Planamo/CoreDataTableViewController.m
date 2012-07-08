@@ -21,12 +21,6 @@
 @synthesize beganUpdates = _beganUpdates;
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
-}
-
 #pragma mark - Fetching
 
 - (void)performFetch

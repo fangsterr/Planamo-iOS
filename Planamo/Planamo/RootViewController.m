@@ -7,14 +7,10 @@
 //
 
 #import "RootViewController.h"
-#import "AddGroupViewController.h"
-#import "EnterPhoneNumberViewController.h"
-#import "LaunchScreenViewController.h"
 #import "PlanamoUser+Helper.h"
 
 @implementation RootViewController
 
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize viewControllerView = _viewControllerView;
 @synthesize feedButton, groupsButton, addButton;
 @synthesize feedController, groupsListController;
@@ -74,6 +70,7 @@
     UIImageView* titleImageView = [[UIImageView alloc] initWithImage:titleImage];
     [titleView addSubview:titleImageView];
     titleImageView.center = titleView.center;
+    self.navigationItem.titleView = titleView;
 }
 
 // Set groups list tab as current selected
@@ -92,7 +89,7 @@
     [super viewDidLoad];
     
     // If user is logged in, show launch screen
-    if ([PlanamoUser currentLoggedInUserInManagedObjectContext:self.managedObjectContext]) {
+    if ([PlanamoUser currentLoggedInUser]) {
         [self performSegueWithIdentifier:@"launchScreen" sender:self];
     } else {
         // If user is not logged in, show sign up screen
@@ -102,7 +99,6 @@
     // Create child view controllers
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
     self.groupsListController = [storyboard instantiateViewControllerWithIdentifier:@"GroupsListTableViewController"];
-    self.groupsListController.managedObjectContext = self.managedObjectContext;
     [self addChildViewController:self.groupsListController];
     self.feedController = [storyboard instantiateViewControllerWithIdentifier:@"FeedViewController"];
     [self addChildViewController:self.feedController];
@@ -117,31 +113,13 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    self.managedObjectContext = nil;
+    self.viewControllerView = nil;
+    self.feedButton = nil;
+    self.groupsButton = nil;
+    self.addButton = nil;
+    self.feedController = nil;
+    self.groupsListController = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
-}
-
-#pragma mark - View Segue
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"addGroup"]) {
-        UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
-        AddGroupViewController *addGroupController = (AddGroupViewController *)navController.topViewController;
-        addGroupController.managedObjectContext = self.managedObjectContext;
-    } else if ([[segue identifier] isEqualToString:@"launchScreen"]) {
-        LaunchScreenViewController *launchScreenController = (LaunchScreenViewController *)[segue destinationViewController];
-        launchScreenController.managedObjectContext = self.managedObjectContext;
-    } else if ([[segue identifier] isEqualToString:@"signUpProcess"]) {
-        UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
-        EnterPhoneNumberViewController *phoneNumberController = (EnterPhoneNumberViewController *)navController.topViewController;
-        phoneNumberController.managedObjectContext = self.managedObjectContext;
-    }
-}
 
 @end

@@ -10,4 +10,6 @@
 
 @interface NSManagedObjectContext (PatchedMagicalRecord)
 
++ (void) MR_setContextForBackgroundThread:(NSManagedObjectContext *)context;
+
 @end

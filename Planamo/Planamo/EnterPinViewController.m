@@ -8,21 +8,19 @@
 
 #import "EnterPinViewController.h"
 #import "MBProgressHUD.h"
-#import "EnterNameViewController.h"
-#import "UserActionsWebService.h"
-#import "APIWebService.h"
+#import "WebService.h"
 #import "Group+Helper.h"
 #import "PlanamoUser+Helper.h"
 #import "AddressBookScanner.h"
 #import "CustomNavigationBar.h"
+#import "NSManagedObjectContext+PatchedMagicalRecord.h"
 
 @implementation EnterPinViewController
 
-@synthesize currentUser = _currentUser;
 @synthesize rawPhoneNumber = _rawPhoneNumber;
 @synthesize pinTextField = _pinTextField;
 @synthesize continueButton = _continueButton;
-@synthesize managedObjectContext = _managedObjectContext;
+
 
 /**
  Generates unique UUID for device
@@ -62,16 +60,9 @@
     [self setPinTextField:nil];
     [self setContinueButton:nil];
     self.rawPhoneNumber = nil;
-    self.currentUser = nil;
-    self.managedObjectContext = nil;
     [super viewDidUnload];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
-}
 
 #pragma mark - Button actions
 
@@ -80,47 +71,49 @@
     NSString *uuid = [self GetUUID];
     
     // Call server
-    NSString *functionName = @"verifyNewMobileUser/";
+    NSString *functionName = @"accounts/verifyNewMobileUser/";
     
     NSDictionary *deviceInfo = [NSDictionary dictionaryWithObjectsAndKeys:uuid, @"deviceID", @"I", @"deviceType", nil];
     NSDictionary *phoneNumberDictionary = [NSDictionary dictionaryWithObjectsAndKeys:self.rawPhoneNumber, @"phoneNumber", self.pinTextField.text, @"pinNumber", deviceInfo, @"deviceInfo", nil];   
 
-    NSLog(@"Calling user action - url:accounts/%@, jsonData: %@", functionName, phoneNumberDictionary);
+    NSLog(@"Calling - POST %@, jsonData: %@", functionName, phoneNumberDictionary);
     
-    [[UserActionsWebService sharedWebService] postPath:functionName parameters:phoneNumberDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
-        NSLog(@"verifyNewMobileUser return: %@", JSON);
+    [[WebService sharedWebService] postPath:functionName parameters:phoneNumberDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"%@ return: %@", functionName, JSON);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
         int code = [[JSON valueForKeyPath:@"code"] intValue];
         
         // If good, next
         if (code == 0) {
-            // Save authentication - TODO (in keychain)
+            // Save authentication
             NSString *username = self.rawPhoneNumber;
             NSString *password = [NSString stringWithFormat:@"%@%@", @"I", uuid];
-            
-            [[APIWebService sharedWebService] setAuthorizationHeaderWithUsername:username password:password];
-            [[APIWebService sharedWebService] authenticateUsername:username andPassword:password]; //temp TODO - remove
+            [[WebService sharedWebService] authenticateUsername:username andPassword:password];
             [[NSUserDefaults standardUserDefaults] setObject:username forKey:@"username"];
             [[NSUserDefaults standardUserDefaults] setObject:password forKey:@"password"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             
-            // Create planamo user in core data
-            NSDictionary *user = [JSON valueForKeyPath:@"user"];
-            NSNumber *userID = [NSNumber numberWithInt:[[user valueForKey:@"id"] intValue]];
-            NSString *firstName = [user valueForKey:@"firstName"];
-            NSString *lastName = [user valueForKey:@"lastName"];
-            self.currentUser = [PlanamoUser findOrCreateUserWithPhoneNumber:self.rawPhoneNumber inManagedObjectContext:self.managedObjectContext];
-            self.currentUser.id = userID;
-            if (firstName) self.currentUser.firstName = firstName;
-            if (lastName) self.currentUser.lastName = lastName;
-            self.currentUser.isLoggedInUser = [NSNumber numberWithBool:YES];
+            // Get JSON data for planamo user
+            NSDictionary *userData = [JSON valueForKeyPath:@"user"];
+            NSString *firstName = [userData valueForKey:@"firstName"];
+            NSString *lastName = [userData valueForKey:@"lastName"];
             
-            // Scan address book
-            [AddressBookScanner scanAddressBookWithManagedContext:self.managedObjectContext];
+            // Create planamo user
+            PlanamoUser *planamoUser = [PlanamoUser MR_importFromObject:userData];
+            planamoUser.isLoggedInUser = [NSNumber numberWithBool:YES];
             
-            // Add groups
-            [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"groupsForUser"] inManagedObjectContext:self.managedObjectContext];
+            [MagicalRecord saveInBackgroundWithBlock:^(NSManagedObjectContext *localContext){
+                [NSManagedObjectContext MR_setContextForBackgroundThread:localContext];
+                
+                // Scan address book
+                [AddressBookScanner scanAddressBook];
+            
+                // Add groups
+                [Group updateOrCreateOrDeleteGroupsFromArray:[JSON valueForKeyPath:@"groupsForUser"]];
+                
+                [localContext MR_saveNestedContexts];
+            }];
             
             // If name exists, end sign up process
             if (![firstName isEqualToString:@""] && ![lastName isEqualToString:@""]) {
@@ -129,10 +122,12 @@
                 // Otherwise, show enter name screen
                 [self performSegueWithIdentifier:@"enterName" sender:self];
             }
+            
+            [[NSManagedObjectContext MR_defaultContext] MR_save];
 
         } else {
             // Otherwise, alert error
-            [[UserActionsWebService sharedWebService] showAlertWithErrorCode:code];
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
             [self.pinTextField becomeFirstResponder];
         }
         
@@ -140,7 +135,7 @@
         NSLog(@"Error: %@", error);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
-        [[UserActionsWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];
         [self.pinTextField becomeFirstResponder];
     }];
     
@@ -149,19 +144,6 @@
     hud.labelText = @"Verifying PIN number...";
     
     [self.pinTextField resignFirstResponder];
-}
-
-
-#pragma mark - Enter Name View Controller
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"enterName"]) {
-        EnterNameViewController *enterNameController = (EnterNameViewController *)[segue destinationViewController];
-        enterNameController.rawPhoneNumber = self.rawPhoneNumber;
-        enterNameController.managedObjectContext = self.managedObjectContext;
-        enterNameController.currentUser = self.currentUser;
-    }
 }
 
 @end

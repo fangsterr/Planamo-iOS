@@ -11,9 +11,11 @@
 @interface AddressBookScanner : NSObject
 
 // Scans user's address book and stores in Core Data
-+ (void)scanAddressBookWithManagedContext:(NSManagedObjectContext *)managedObjectContext;
++ (void)scanAddressBook;
 
-// Formats phone number string into raw format USA (e.g. 16503916950)
++ (void)scanAddressBookInContext:(NSManagedObjectContext*)localContext;
+
+// Formats phone number string into raw format USA (e.g. +16503916950)
 + (NSString *)reformatPhoneNumber:(NSString *)phoneNumber;
 
 @end

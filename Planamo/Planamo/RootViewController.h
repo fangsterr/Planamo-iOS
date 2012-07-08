@@ -12,7 +12,6 @@
 
 @interface RootViewController : UIViewController
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) IBOutlet UIView *viewControllerView;
 @property (nonatomic, strong) IBOutlet UIButton *feedButton;
 @property (nonatomic, strong) IBOutlet UIButton *groupsButton;

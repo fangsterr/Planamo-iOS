@@ -13,7 +13,6 @@
 @interface AddGroupViewController : UIViewController <UITextFieldDelegate, ContactsTokenFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *groupNameTextField;
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) IBOutlet UIView *contactsView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 

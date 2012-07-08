@@ -9,7 +9,7 @@
 #import "WebService.h"
 #import "AFJSONRequestOperation.h"
 
-static NSString * const kAPIWebServiceBaseURLString = @"https://sharp-fire-8026.herokuapp.com/";
+static NSString * const kAPIWebServiceBaseURLString = @"http://sharp-fire-8026.herokuapp.com/"; // TODO - secure
 #define kAPIKey         @"j0d1eCHILLBE4R"
 
 @implementation WebService

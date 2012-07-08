@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[NSManagedObject(MagicalRecord_DataImport) MR_setAttributes:forKeysWithDictionary:]:NSManagedObject+MagicalDataImport.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "(NSDictionary *)attributes">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[NSEntityDescription(MagicalRecord_DataImport) MR_primaryAttributeToRelateBy]:NSEntityDescription+MagicalDataImport.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[CustomNavigationBar back:]:CustomNavigationBar.m">
+      </ContextState>
+      <ContextState
+         contextName = "__57-[GroupUsersListTableViewController deleteUserFromGroup:]_block_invoke_0:GroupUsersListTableViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__block_global_0:GroupUsersListTableViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[GroupUserLink(Helper) updateOrCreateOrDeleteGroupUserLinksFromArray:forGroup:onlyUpdate:]:GroupUserLink+Helper.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[NSManagedObject(MagicalRecord_DataImport) MR_importFromObject:inContext:]:NSManagedObject+MagicalDataImport.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[NSManagedObject(MagicalRequests) MR_requestFirstByAttribute:withValue:inContext:]:NSManagedObject+MagicalRequests.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[NSManagedObject(MagicalRecord_DataImport) MR_importFromObject:]:NSManagedObject+MagicalDataImport.m">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

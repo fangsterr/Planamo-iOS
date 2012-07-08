@@ -8,50 +8,17 @@
 
 #import "EnterNameViewController.h"
 #import "MBProgressHUD.h"
-#import "APIWebService.h"
+#import "WebService.h"
+#import "PlanamoUser+Helper.h"
 
 @implementation EnterNameViewController
 
 @synthesize firstNameTextField;
 @synthesize lastNameTextField;
 @synthesize doneButton;
-@synthesize rawPhoneNumber = _rawPhoneNumber;
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize currentUser = _currentUser;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-*/
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -66,43 +33,36 @@
     [super viewDidUnload];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
-}
 
 #pragma mark - Button actions
 
 - (IBAction)done:(id)sender
 {      
+    PlanamoUser *user = [PlanamoUser currentLoggedInUser];
+    
     // Call server
-    NSString *functionName = [NSString stringWithFormat:@"user/%@/", self.currentUser.id];
+    NSString *functionName = [NSString stringWithFormat:@"api/user/%@/", user.id];
     NSDictionary *userUpdateDictionary = [NSDictionary dictionaryWithObjectsAndKeys:self.firstNameTextField.text, @"firstName", self.lastNameTextField.text, @"lastName", nil];
     
-    NSLog(@"Calling API - PUT api/%@, jsonData: %@", functionName, userUpdateDictionary);
+    NSLog(@"Calling - PUT %@, jsonData: %@", functionName, userUpdateDictionary);
     
-    [[APIWebService sharedWebService] putPath:functionName parameters:userUpdateDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+    [[WebService sharedWebService] putPath:functionName parameters:userUpdateDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
         NSLog(@"PUT %@ - return: %@", functionName, JSON);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
         int code = [[JSON valueForKeyPath:@"code"] intValue];
         
         // If good, update user and end sign up process
-        if (!code || code == 0) {
-            self.currentUser.firstName = self.firstNameTextField.text;
-            self.currentUser.lastName = self.lastNameTextField.text;
-            
-            NSError *error = nil;
-            if (![self.managedObjectContext save:&error]) {
-                NSLog(@"%@", error);
-            }
+        if (code == 0) {
+            user.firstName = self.firstNameTextField.text;
+            user.lastName = self.lastNameTextField.text;
+            [[NSManagedObjectContext MR_defaultContext] MR_save];
             
             [self dismissModalViewControllerAnimated:YES];
             
         } else {
             // Otherwise, alert error
-            [[APIWebService sharedWebService] showAlertWithErrorCode:code];
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
             [self.firstNameTextField becomeFirstResponder];
         }
         
@@ -110,7 +70,7 @@
         NSLog(@"Error: %@", error);
         [MBProgressHUD hideHUDForView:self.view animated:YES]; // remove progress indicator
         
-        [[APIWebService sharedWebService] showAlertWithErrorCode:[error code]];
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];
         [self.firstNameTextField becomeFirstResponder];
     }];
 

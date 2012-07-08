@@ -302,7 +302,7 @@ static NSString *const kHiddenCharacter = @"\u200B";
     
     // Currently we don't support non-usa numbers - TODO
     PhoneNumber *number = (PhoneNumber *)object;
-    if (![number.numberAsStringWithoutFormat hasPrefix:@"1"]) {
+    if (![number.numberAsStringWithoutFormat hasPrefix:@"+1"]) {
         UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Not a valid phone number" 
                                                     message:@"Sorry! But we currently support only USA-only numbers." 
                                                    delegate:nil 

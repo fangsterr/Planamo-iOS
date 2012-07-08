@@ -8,126 +8,51 @@
 
 #import "Group+Helper.h"
 #import "PlanamoUser+Helper.h"
-#import "GroupUserLink+Helper.h"
+#import "Message+Helper.h"
 #import "AddressBookScanner.h"
 
 @implementation Group (Helper)
 
-+ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
-    NSError *error = nil;
++ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups {
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSDate *dateStartUpdating = [NSDate date];
     
-    for (NSDictionary *anImportGroup in importGroups) {        
-        // Find or create new group
-        Group *currentGroup = nil;
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
-        request.predicate = [NSPredicate predicateWithFormat:@"id = %@", [anImportGroup valueForKey:@"id"]];        
-        NSArray *groupArray = [managedObjectContext executeFetchRequest:request error:&error];
-        
-        // If group doesn't exist, create
-        if (![groupArray count]) {
-            [Group createNewGroupFromDictionary:anImportGroup inManagedObjectContext:managedObjectContext];
-        
-        // If group exists, update
-        } else { 
-            currentGroup = [groupArray lastObject];
-            currentGroup.name = [anImportGroup valueForKey:@"name"];
-            currentGroup.welcomeMessage = [anImportGroup valueForKey:@"welcomeMessage"];
-            [Group updateOrCreateOrDeleteUsersInGroupFromArray:[anImportGroup valueForKey:@"users"] forGroup:currentGroup onlyUpdate:NO inManagedObjectContext:managedObjectContext];
-            currentGroup.lastUpdated = [NSDate date];
-        }
+    for (NSDictionary *anImportGroup in importGroups) {     
+        Group *group = [Group MR_importFromObject:anImportGroup inContext:localContext];
+        group.lastUpdated = [NSDate date];
     }
     
     // Delete groups that were not updated
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Group"];
-    request.predicate = [NSPredicate predicateWithFormat:@"lastUpdated < %@", dateStartUpdating];
-    NSArray *groupArray = [managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *groupArray = [Group MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"lastUpdated < %@", dateStartUpdating] inContext:localContext];
     for (Group *group in groupArray) {
-        [managedObjectContext deleteObject:group];
-    }
-    
-    // Save
-    if (![managedObjectContext save:&error]) {
-        NSLog(@"%@", error);
+        [group MR_deleteInContext:localContext];
     }
 }
 
-+ (void)createNewGroupFromDictionary:(NSDictionary *)groupDictionary inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
-    // Get users array
-    NSArray *usersInGroupArray = [groupDictionary valueForKey:@"usersInGroup"];
+- (void)addUsersToGroup:(NSArray *)importUsers {
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];    
     
-    // Create group
-    Group *group = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:managedObjectContext];
-    group.name = [groupDictionary valueForKey:@"name"];
-    group.id = [NSNumber numberWithInt:[[groupDictionary valueForKey:@"id"] intValue]];
-    group.lastUpdated = [NSDate date];
-    group.welcomeMessage = [groupDictionary valueForKey:@"welcomeMessage"];
-    
-    // Create users + links
-    for (NSDictionary *anUserInGroup in usersInGroupArray) {
-        NSDictionary *userInfo = [anUserInGroup valueForKey:@"user"];        
-        NSString *firstName = [userInfo valueForKey:@"firstName"];
-        NSString *lastName = [userInfo valueForKey:@"lastName"];
-        NSString *phoneNumber = [userInfo valueForKey:@"phoneNumber"];
-        BOOL isOrganizer = [(NSNumber *)[anUserInGroup valueForKey:@"isOrganizer"] boolValue];
-        
+    for (NSDictionary *user in importUsers) {
         // Find or create planamo user
-        PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:phoneNumber inManagedObjectContext:managedObjectContext];
-        if (!user.firstName) user.firstName = firstName;
-        if (!user.lastName) user.lastName = lastName;
+        PlanamoUser *user = [PlanamoUser MR_importFromObject:user inContext:localContext];
         
-        // Create group-user link
-        GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group inManagedObjectContext:managedObjectContext];
+        // Add user to group
+        [user addGroupsObject:self];
     }
-    
-    // Save
-    NSError *error = nil;
-    if (![managedObjectContext save:&error]) {
-        NSLog(@"%@", error);
-    }
-
 }
 
-+ (void)updateOrCreateOrDeleteUsersInGroupFromArray:(NSArray *)importUsers forGroup:(Group *)group onlyUpdate:(BOOL)onlyUpdate inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
-    NSError *error = nil;
-    NSDate *dateStartUpdating = [NSDate date];
-    
-    for (NSDictionary *anUserInGroup in importUsers) {
-        // Get user 
-        NSDictionary *userInfo = [anUserInGroup valueForKey:@"user"];        
-        NSString *firstName = [userInfo valueForKey:@"firstName"];
-        NSString *lastName = [userInfo valueForKey:@"lastName"];
-        NSString *phoneNumber = [userInfo valueForKey:@"phoneNumber"];
-        BOOL isOrganizer = [(NSNumber *)[anUserInGroup valueForKey:@"isOrganizer"] boolValue];
-        
-        // Find or create planamo user
-        PlanamoUser *user = [PlanamoUser findOrCreateUserWithPhoneNumber:phoneNumber inManagedObjectContext:managedObjectContext];
-        
-        // Update planamo user
-        user.firstName = firstName;
-        user.lastName = lastName;
-        
-        // Find or create group user link
-        GroupUserLink *groupUserLink = [GroupUserLink findOrCreateGroupUserLinkForUser:user andGroup:group inManagedObjectContext:managedObjectContext];
-        
-        // Update group user link
-        groupUserLink.lastUpdated = [NSDate date];
-    }
-    
-    if (!onlyUpdate) {
-        // Delete group user links that were not updated
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"GroupUserLink"];
-        request.predicate = [NSPredicate predicateWithFormat:@"group.id = %@ AND lastUpdated < %@", group.id, dateStartUpdating];
-        NSArray *groupUserLinkArray = [managedObjectContext executeFetchRequest:request error:&error];
-        for (GroupUserLink *groupUserLink in groupUserLinkArray) {
-            [managedObjectContext deleteObject:groupUserLink];
-        }
-    }
-    
-    // Save
-    if (![managedObjectContext save:&error]) {
-        NSLog(@"%@", error);
-    }
+- (void)willImport:(id)data {
+    [self removeUsers:self.users];
+}
+
+- (BOOL)importId:(id)data {
+    self.id = [NSNumber numberWithInt:[data intValue]];
+    return YES;
+}
+
+- (BOOL)importMessages:(id)data {
+    [Message updateOrCreateOrDeleteMessagesFromArray:[data valueForKeyPath:@"messages"] forGroup:self];
+    return YES;
 }
 
 @end

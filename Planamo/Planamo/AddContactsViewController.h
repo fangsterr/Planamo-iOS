@@ -13,11 +13,11 @@
 
 @interface AddContactsViewController : UIViewController
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) ContactsTokenField *tokenField;
 @property (nonatomic, strong) Group *group;
 
 -(IBAction)done;
 -(IBAction)cancel;
+- (NSMutableArray *)convertUserTokensIntoUsersArray;
 
 @end

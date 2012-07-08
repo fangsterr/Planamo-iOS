@@ -13,6 +13,4 @@
 
 @interface GroupsListTableViewController : CoreDataTableViewController <PullToRefreshViewDelegate>
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-
 @end

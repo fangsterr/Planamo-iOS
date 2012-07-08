@@ -8,16 +8,21 @@
 
 #import "GroupMessagesViewController.h"
 #import "GroupMessagesTableViewCell.h"
-#import "PlanamoUser.h"
-#import "Message.h"
-#import "GroupUsersListTableViewController.h"
+#import "PlanamoUser+Helper.h"
+#import "Message+Helper.h"
+#import "WebService.h"
 
-@implementation GroupMessagesViewController
+@implementation GroupMessagesViewController {
+    int _messageIsForEvent;
+    BOOL _beginUpdates;
+    BOOL _pauseTrackingChanges;
+    NSTimer *_messageFetcher;
+}
 
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize messagesTableView, sendButton, messagesInputBoxTextView, messageBarView;
+@synthesize messagesTableView, sendButton, messagesInputBoxTextView, messageBarView, eventIconButton;
 @synthesize messageBarBackground, messagesInputBoxBackground;
+@synthesize eventDetailsHeader, eventNameLabel, deleteEventButton;
 @synthesize group = _group;
 
 
@@ -97,6 +102,21 @@
 }
 
 -(void) keyboardWillShow:(NSNotification *)note{
+    if (self.group.hasEvent) {
+        //TODO clean up - event detail header
+        CGRect r = self.eventDetailsHeader.frame;
+        r.origin.y = -r.size.height;
+        self.eventDetailsHeader.frame = r;
+        
+        CGRect table = self.messagesTableView.frame;
+        table.origin.y = 0;
+        CGRect containerFrame = self.messageBarView.frame;
+        table.size.height = self.view.bounds.size.height - containerFrame.size.height;
+        self.messagesTableView.frame = table;
+    }
+    
+    
+    
     // get keyboard size and loctaion
 	CGRect keyboardBounds;
     [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &keyboardBounds];
@@ -123,7 +143,7 @@
 	// set views with new info
 	self.messageBarView.frame = containerFrame;
     self.messagesTableView.frame = tableFrame;
-	
+    
 	// commit animations
 	[UIView commitAnimations];
     
@@ -151,6 +171,19 @@
 	// set views with new info
 	self.messageBarView.frame = containerFrame;
     self.messagesTableView.frame = tableFrame;
+    
+    
+    if (self.group.hasEvent) {
+    //TODO clean up - event detail header
+    CGRect r = self.eventDetailsHeader.frame;
+    r.origin.y = 0;
+    self.eventDetailsHeader.frame = r;
+    CGRect table = self.messagesTableView.frame;
+    table.origin.y = r.size.height;
+    table.size.height -= r.size.height;
+    self.messagesTableView.frame = table;
+    }
+    
 	
 	// commit animations
 	[UIView commitAnimations];
@@ -184,14 +217,176 @@
     }
 }
 
--(IBAction)sendMessage {
+-(IBAction)switchEventIcon {
+    if (_messageIsForEvent == 0) {
+        UIImage *calendarColorIcon = [UIImage imageNamed:@"CalendarColorIcon.png"];
+        [self.eventIconButton setBackgroundImage:calendarColorIcon forState:UIControlStateNormal];
+        [self.eventIconButton setBackgroundImage:calendarColorIcon forState:UIControlStateSelected];
+        
+        _messageIsForEvent = 1;
+    } else {
+        UIImage *calendarGreyIcon = [UIImage imageNamed:@"CalendarGreyIcon.png"];
+        [self.eventIconButton setBackgroundImage:calendarGreyIcon forState:UIControlStateNormal];
+        [self.eventIconButton setBackgroundImage:calendarGreyIcon forState:UIControlStateSelected];
+        
+        _messageIsForEvent = 0;
+    }
+}
+
+#pragma mark - Event details Header
+
+-(void)createEventDetailsHeader {
+    // TODO - clean this code up
     
+    if (self.group.hasEvent) {
+        CGRect r = self.eventDetailsHeader.frame;
+        r.origin.y = 0;
+        self.eventDetailsHeader.frame = r;
+        
+        CGRect table = self.messagesTableView.frame;
+        table.origin.y = r.size.height;
+        table.size.height -= r.size.height;
+        self.messagesTableView.frame = table;
+        
+        self.eventNameLabel.text = self.group.eventName;
+        
+    } else {
+        CGRect r = self.eventDetailsHeader.frame;
+        r.origin.y = -r.size.height;
+        self.eventDetailsHeader.frame = r;
+        
+        CGRect table = self.messagesTableView.frame;
+        table.origin.y = 0;
+        CGRect containerFrame = self.messageBarView.frame;
+        table.size.height = self.view.bounds.size.height - containerFrame.size.height;
+        self.messagesTableView.frame = table;
+    }
 }
 
 #pragma mark - Server Calls
 
--(void)fetchMessagesFromServer {
+#import "MBProgressHUD.h"
+
+-(IBAction)sendMessage {
+    // TODO - abstract
+    NSDictionary *messageDictionary = [NSDictionary dictionaryWithObjectsAndKeys:self.messagesInputBoxTextView.text, @"messageText", nil];
+    NSDictionary *dataDictionary = [NSDictionary dictionaryWithObjectsAndKeys:messageDictionary, @"message", self.group.id, @"groupID", nil];
     
+    NSString *functionName = @"messages/sendMessageFromiOS/";
+    
+    NSLog(@"Calling - %@, jsonData: %@", functionName, dataDictionary);
+    
+    [[WebService sharedWebService] postPath:functionName parameters:dataDictionary success:^(AFHTTPRequestOperation *operation, id JSON) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        NSLog(@"POST %@ - return: %@", functionName, JSON);
+        
+        NSString *jsonCode = [JSON valueForKeyPath:@"code"];
+        int code = [jsonCode intValue];
+        
+        // TODO - create nsobject, then remove (or try again sign) if unsuccessful (feels faster)
+        
+        // If good, next
+        if (code == 0) {
+            // add data
+            Message *newMessage = [Message MR_createEntity];
+            newMessage.id = [JSON valueForKeyPath:@"messageID"];
+            newMessage.isNotification = [NSNumber numberWithBool:NO];
+            newMessage.messageText = self.messagesInputBoxTextView.text;
+            newMessage.group = self.group;
+            newMessage.sender = [PlanamoUser currentLoggedInUser];
+            newMessage.datetimeSent = [NSDate date];
+            [[NSManagedObjectContext MR_defaultContext] MR_save];
+            
+            //[self.messagesTableView reloadData];
+                        
+            self.messagesInputBoxTextView.text = @"";
+            
+            [self scrollToBottomAnimated:YES];
+
+            
+            // TODO - event. Abstract code
+        } else {
+            // Otherwise, alert error
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+        NSLog(@"Error: %@", error);
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];        
+    }];
+    
+    // Add progress indicator
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Sending...";
+}
+
+-(void)fetchMessagesFromServer {
+    NSString *functionName = [NSString stringWithFormat:@"api/group/%@/messages", self.group.id];
+    
+    NSDictionary *param = [NSDictionary dictionaryWithObjectsAndKeys:@"-id", @"order_by", nil];
+    
+    NSLog(@"Calling GET %@, param %@", functionName, param);
+    
+    [[WebService sharedWebService] getPath:functionName parameters:param success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"GET %@ - return: %@", functionName, JSON);
+        
+        NSString *jsonCode = [JSON valueForKeyPath:@"code"];
+        int code = [jsonCode intValue];
+        
+        // If good, next
+        if (code == 0) {
+            
+            _pauseTrackingChanges = YES;
+            
+            [Message updateOrCreateOrDeleteMessagesFromArray:[JSON valueForKeyPath:@"objects"] forGroup:self.group];
+            [[NSManagedObjectContext MR_defaultContext] MR_save];
+                                    
+            _pauseTrackingChanges = NO;
+            
+            [self.messagesTableView reloadData];
+                                    
+            [self scrollToBottomAnimated:NO];
+                        
+        } else {
+            // Otherwise, alert error
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];        
+    }];
+
+}
+
+-(IBAction)deleteEvent {
+    NSString *functionName = [NSString stringWithFormat:@"api/group/%@/event/", self.group.id];
+    
+    NSLog(@"Calling DELETE %@", functionName);
+    
+    [[WebService sharedWebService] deletePath:functionName parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"DELETE %@ - return: %@", functionName, JSON);
+        
+        NSString *jsonCode = [JSON valueForKeyPath:@"code"];
+        int code = [jsonCode intValue];
+                
+        // If good, next
+        if (code == 0) {
+            [[NSManagedObjectContext MR_defaultContext] MR_save];
+            [self createEventDetailsHeader];
+                        
+        } else {
+            // Otherwise, alert error
+            [[WebService sharedWebService] showAlertWithErrorCode:code];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [[WebService sharedWebService] showAlertWithErrorCode:[error code]];        
+    }];
 }
 
 #pragma mark - View Lifecycle
@@ -202,7 +397,7 @@
     
     self.title = self.group.name;
     [self createMessageBarView];
-    
+            
     // Listen for keyboard.
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(keyboardWillShow:)
@@ -214,6 +409,22 @@
                                                object:nil]; 
     
     [self resetSendButton];
+    
+    _messageIsForEvent = 0;
+    
+    [self createEventDetailsHeader];
+    
+    if (self.group.hasEvent) [self switchEventIcon];
+    
+    //TODO - figure out how event details header gets displayed
+    
+    _messageFetcher = [NSTimer scheduledTimerWithTimeInterval:7.0
+                                     target:self
+                                   selector:@selector(fetchMessagesFromServer)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+    
     
     // TODO - fetch messages. Event creation
   /*  CustomNavigationBar* customNavigationBar = (CustomNavigationBar*)self.navigationController.navigationBar;
@@ -231,20 +442,19 @@
     [self scrollToBottomAnimated:NO];
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [_messageFetcher invalidate];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    self.managedObjectContext = nil;
     self.fetchedResultsController = nil;
     self.messagesTableView = nil;
     self.sendButton = nil;
     self.group = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait || 
-            interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
+    _messageFetcher = nil;
 }
 
 
@@ -304,24 +514,40 @@
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     CGFloat messageLabelHeight = [GroupMessagesTableViewCell messageLabelHeightForText:message.messageText];
     return messageLabelHeight + 30.0f; // 30 = height of name label + padding 
-} 
-
+}
 
 #pragma mark - Fetched Results Controller & Delegate 
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    if (!_pauseTrackingChanges) {
+        [self.messagesTableView beginUpdates];
+        _beginUpdates = YES;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    if (_beginUpdates) {
+        [self.messagesTableView endUpdates];
+    }
+}
 
 - (NSFetchedResultsController *)fetchedResultsController
 {
     NSFetchedResultsController *aFetchedResultsController = _fetchedResultsController;
     if (!aFetchedResultsController) {
+        NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
         
         // Create and configure fetch request
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        fetchRequest.entity = [NSEntityDescription entityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
-        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"group.id = %@", self.group.id];
-        fetchRequest.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES]];
-
+        NSFetchRequest *fetchRequest = [Message MR_requestAllSortedBy:@"datetimeSent" 
+                                                            ascending:YES 
+                                                        withPredicate:[NSPredicate predicateWithFormat:@"group.id = %@", self.group.id]];
+     
         // Create and initialize fech results controller
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"message"]; // TODO - cache
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:localContext sectionNameKeyPath:nil cacheName:nil]; // TODO - cache
+        //[NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName]; //TODO - if uses cache
+        _fetchedResultsController.delegate = self;
 
         NSError *error;
         if (![_fetchedResultsController performFetch:&error]) {
@@ -340,25 +566,33 @@
 	 forChangeType:(NSFetchedResultsChangeType)type
 	  newIndexPath:(NSIndexPath *)newIndexPath
 {		
-    switch(type)
-    {
-        case NSFetchedResultsChangeInsert:
-            [self.messagesTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.messagesTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [self.messagesTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [self.messagesTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self.messagesTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
+    if (!_pauseTrackingChanges) {
+        switch(type)
+        {
+            case NSFetchedResultsChangeInsert:
+                [self.messagesTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+                
+            case NSFetchedResultsChangeDelete:
+                [self.messagesTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+                
+            case NSFetchedResultsChangeUpdate:
+                [self.messagesTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+                
+            case NSFetchedResultsChangeMove:
+                [self.messagesTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [self.messagesTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+        }
     }
+}
+
+#pragma mark - Group Users List Delegate
+
+-(void)lastUserInGroupDidGetDeleted {
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 #pragma mark - View Segue
@@ -369,7 +603,7 @@
         UINavigationController *navController = (UINavigationController *)[segue destinationViewController];
         GroupUsersListTableViewController *groupUsersController = (GroupUsersListTableViewController *)navController.topViewController;
         groupUsersController.group = self.group;
-        groupUsersController.managedObjectContext = self.managedObjectContext;
+        groupUsersController.delegate = self;
     }
 }
 

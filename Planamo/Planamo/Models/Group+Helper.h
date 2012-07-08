@@ -14,16 +14,16 @@
  Find (and update) or create or delete groups in core data, based on import groups from server
  Import groups expects array of dictionary (group JSON object)
  */
-+ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
-
-
-/* Creates new group from dictionary (group JSON object) */
-+ (void)createNewGroupFromDictionary:(NSDictionary *)groupDictionary inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
++ (void)updateOrCreateOrDeleteGroupsFromArray:(NSArray *)importGroups;
 
 /*
- Find (and update) or create or delete users for group in core data, based on import users from server
- Import users expects array of dictionary (user JSON object)
+ Add new users to group. Import users expects array of dictionary (user JSON object)
  */
-+ (void)updateOrCreateOrDeleteUsersInGroupFromArray:(NSArray *)importUsers forGroup:(Group *)group onlyUpdate:(BOOL)onlyUpdate inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+- (void)addUsersToGroup:(NSArray *)importUsers;
+
+// Override magical records import
+- (void)willImport:(id)data;
+- (BOOL)importId:(id)data;
+- (BOOL)importMessages:(id)data;
 
 @end

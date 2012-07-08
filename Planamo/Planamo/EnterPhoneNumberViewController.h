@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PhoneNumberFormatter.h"
 
 @interface EnterPhoneNumberViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UITextField *phoneNumberTextField;
 @property (strong, nonatomic) IBOutlet UIButton *continueButton;
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
 - (IBAction)continue:(id)sender;
 

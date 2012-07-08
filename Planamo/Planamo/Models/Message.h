@@ -2,7 +2,7 @@
 //  Message.h
 //  Planamo
 //
-//  Created by Stanley Tang on 26/05/2012.
+//  Created by Stanley Tang on 02/07/2012.
 //  Copyright (c) 2012 Planamo. All rights reserved.
 //
 
@@ -15,7 +15,6 @@
 
 @property (nonatomic, retain) NSDate * datetimeSent;
 @property (nonatomic, retain) NSNumber * id;
-@property (nonatomic, retain) NSNumber * isEvent;
 @property (nonatomic, retain) NSNumber * isNotification;
 @property (nonatomic, retain) NSString * messageText;
 @property (nonatomic, retain) Group *group;
