@@ -7,16 +7,10 @@
 //
 
 #import "PlanamoAppDelegate.h"
-#import "RootViewController.h"
 
 @implementation PlanamoAppDelegate
 
 @synthesize window = _window;
-
-#import "GroupMessagesViewController.h"
-#import "Group.h"
-#import "Message.h"
-#import "PlanamoUser+Helper.h"
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

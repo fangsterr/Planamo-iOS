@@ -10,6 +10,8 @@
 		69061D4C15574AD000112853 /* LaunchScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69061D4B15574ACF00112853 /* LaunchScreenViewController.m */; };
 		69061D58155765C400112853 /* PlanamoUser+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 69061D57155765C400112853 /* PlanamoUser+Helper.m */; };
 		69061D5F15576C7B00112853 /* Group+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 69061D5E15576C7B00112853 /* Group+Helper.m */; };
+		69095F3515AD5C540026964B /* BoardMessageBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 69095F3315AD5C540026964B /* BoardMessageBackground.png */; };
+		69095F3615AD5C540026964B /* BoardMessageBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69095F3415AD5C540026964B /* BoardMessageBackground@2x.png */; };
 		690B4456157592EC00EA3F9A /* Message+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 690B4455157592EC00EA3F9A /* Message+Helper.m */; };
 		690D7DEB156DD6D700295132 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D7DEA156DD6D700295132 /* RootViewController.m */; };
 		690D7E30156E216E00295132 /* FeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D7E2F156E216D00295132 /* FeedViewController.m */; };
@@ -62,12 +64,6 @@
 		691A29F615768A4A003D7F9C /* MagicalRecord+Setup.m in Sources */ = {isa = PBXBuildFile; fileRef = 691A29D815768A49003D7F9C /* MagicalRecord+Setup.m */; };
 		691A29F715768A4A003D7F9C /* MagicalRecord+ShorthandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 691A29DA15768A49003D7F9C /* MagicalRecord+ShorthandSupport.m */; };
 		691A29F815768A4A003D7F9C /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 691A29DC15768A49003D7F9C /* MagicalRecord.m */; };
-		691DFD0D157C588A003827C8 /* EventDetailsHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 691DFD0B157C588A003827C8 /* EventDetailsHeader@2x.png */; };
-		691DFD0E157C588A003827C8 /* EventDetailsHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = 691DFD0C157C588A003827C8 /* EventDetailsHeader.png */; };
-		691DFD13157C6917003827C8 /* CalendarColorIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 691DFD0F157C6917003827C8 /* CalendarColorIcon@2x.png */; };
-		691DFD14157C6917003827C8 /* CalendarColorIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 691DFD10157C6917003827C8 /* CalendarColorIcon.png */; };
-		691DFD15157C6917003827C8 /* CalendarGreyIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 691DFD11157C6917003827C8 /* CalendarGreyIcon@2x.png */; };
-		691DFD16157C6917003827C8 /* CalendarGreyIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 691DFD12157C6917003827C8 /* CalendarGreyIcon.png */; };
 		69233A991549DDE400243C16 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233A981549DDE400243C16 /* UIKit.framework */; };
 		69233A9B1549DDE400243C16 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233A9A1549DDE400243C16 /* Foundation.framework */; };
 		69233A9D1549DDE400243C16 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69233A9C1549DDE400243C16 /* CoreGraphics.framework */; };
@@ -151,6 +147,8 @@
 		69061D57155765C400112853 /* PlanamoUser+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "PlanamoUser+Helper.m"; path = "Models/PlanamoUser+Helper.m"; sourceTree = "<group>"; };
 		69061D5D15576C7B00112853 /* Group+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Group+Helper.h"; path = "Models/Group+Helper.h"; sourceTree = "<group>"; };
 		69061D5E15576C7B00112853 /* Group+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Group+Helper.m"; path = "Models/Group+Helper.m"; sourceTree = "<group>"; };
+		69095F3315AD5C540026964B /* BoardMessageBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BoardMessageBackground.png; sourceTree = "<group>"; };
+		69095F3415AD5C540026964B /* BoardMessageBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BoardMessageBackground@2x.png"; sourceTree = "<group>"; };
 		690B4454157592EC00EA3F9A /* Message+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Message+Helper.h"; path = "Models/Message+Helper.h"; sourceTree = "<group>"; };
 		690B4455157592EC00EA3F9A /* Message+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Message+Helper.m"; path = "Models/Message+Helper.m"; sourceTree = "<group>"; };
 		690D7DE9156DD6D700295132 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
@@ -237,12 +235,6 @@
 		691A29DC15768A49003D7F9C /* MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecord.m; sourceTree = "<group>"; };
 		691A29DD15768A49003D7F9C /* MagicalRecordShorthand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordShorthand.h; sourceTree = "<group>"; };
 		691A29DE15768A49003D7F9C /* CoreData+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CoreData+MagicalRecord.h"; sourceTree = "<group>"; };
-		691DFD0B157C588A003827C8 /* EventDetailsHeader@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "EventDetailsHeader@2x.png"; sourceTree = "<group>"; };
-		691DFD0C157C588A003827C8 /* EventDetailsHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EventDetailsHeader.png; sourceTree = "<group>"; };
-		691DFD0F157C6917003827C8 /* CalendarColorIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CalendarColorIcon@2x.png"; sourceTree = "<group>"; };
-		691DFD10157C6917003827C8 /* CalendarColorIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CalendarColorIcon.png; sourceTree = "<group>"; };
-		691DFD11157C6917003827C8 /* CalendarGreyIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CalendarGreyIcon@2x.png"; sourceTree = "<group>"; };
-		691DFD12157C6917003827C8 /* CalendarGreyIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CalendarGreyIcon.png; sourceTree = "<group>"; };
 		69233A941549DDE400243C16 /* Planamo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Planamo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69233A981549DDE400243C16 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		69233A9A1549DDE400243C16 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -766,12 +758,8 @@
 		69EC82A1155FB9B10010EEED /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				691DFD0F157C6917003827C8 /* CalendarColorIcon@2x.png */,
-				691DFD10157C6917003827C8 /* CalendarColorIcon.png */,
-				691DFD11157C6917003827C8 /* CalendarGreyIcon@2x.png */,
-				691DFD12157C6917003827C8 /* CalendarGreyIcon.png */,
-				691DFD0B157C588A003827C8 /* EventDetailsHeader@2x.png */,
-				691DFD0C157C588A003827C8 /* EventDetailsHeader.png */,
+				69095F3315AD5C540026964B /* BoardMessageBackground.png */,
+				69095F3415AD5C540026964B /* BoardMessageBackground@2x.png */,
 				690D7E70156F453000295132 /* Header */,
 				690D7E5F156F22E600295132 /* Tab Bar */,
 				69EC82B6155FBD510010EEED /* app-icon.png */,
@@ -921,12 +909,8 @@
 				69A306F71573200400B190C8 /* MessageEntryBackground@2x.png in Resources */,
 				69A306F81573200400B190C8 /* MessageEntryInputField.png in Resources */,
 				69A306F91573200400B190C8 /* MessageEntryInputField@2x.png in Resources */,
-				691DFD0D157C588A003827C8 /* EventDetailsHeader@2x.png in Resources */,
-				691DFD0E157C588A003827C8 /* EventDetailsHeader.png in Resources */,
-				691DFD13157C6917003827C8 /* CalendarColorIcon@2x.png in Resources */,
-				691DFD14157C6917003827C8 /* CalendarColorIcon.png in Resources */,
-				691DFD15157C6917003827C8 /* CalendarGreyIcon@2x.png in Resources */,
-				691DFD16157C6917003827C8 /* CalendarGreyIcon.png in Resources */,
+				69095F3515AD5C540026964B /* BoardMessageBackground.png in Resources */,
+				69095F3615AD5C540026964B /* BoardMessageBackground@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1089,7 +1073,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Stanley Tang (S5R7358JSA)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Stanley Tang (S5R7358JSA)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1105,6 +1089,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PROVISIONING_PROFILE = "58439584-74E0-41C4-A935-BE4EF895EB74";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "58439584-74E0-41C4-A935-BE4EF895EB74";
 				SDKROOT = iphoneos5.0;
 			};
 			name = Debug;
@@ -1115,7 +1100,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Stanley Tang (S5R7358JSA)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1125,7 +1110,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "58439584-74E0-41C4-A935-BE4EF895EB74";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos5.0;
 				VALIDATE_PRODUCT = YES;
 			};

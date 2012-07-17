@@ -8,10 +8,7 @@
         <relationship name="planamoUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlanamoUser" inverseName="addressBookContact" inverseEntity="PlanamoUser" syncable="YES"/>
     </entity>
     <entity name="Group" representedClassName="Group" syncable="YES">
-        <attribute name="eventLocation" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="eventName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="eventStartDatetime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="hasEvent" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="boardMessage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="lastUpdated" attributeType="Date" syncable="YES"/>
         <attribute name="name" attributeType="String" maxValueString="100" syncable="YES"/>
@@ -60,7 +57,7 @@
     </entity>
     <elements>
         <element name="AddressBookContact" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Group" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Group" positionX="160" positionY="192" width="128" height="135"/>
         <element name="Message" positionX="160" positionY="192" width="128" height="150"/>
         <element name="PhoneNumber" positionX="160" positionY="192" width="128" height="105"/>
         <element name="PlanamoUser" positionX="160" positionY="192" width="128" height="165"/>

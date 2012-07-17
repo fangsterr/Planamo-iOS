@@ -16,10 +16,7 @@
 @dynamic id;
 @dynamic lastUpdated;
 @dynamic name;
-@dynamic hasEvent;
-@dynamic eventName;
-@dynamic eventLocation;
-@dynamic eventStartDatetime;
+@dynamic boardMessage;
 @dynamic users;
 @dynamic messages;
 

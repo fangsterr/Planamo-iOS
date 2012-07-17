@@ -13,24 +13,19 @@
 #import "WebService.h"
 
 @implementation GroupMessagesViewController {
-    int _messageIsForEvent;
     BOOL _beginUpdates;
     BOOL _pauseTrackingChanges;
     NSTimer *_messageFetcher;
+    int _boardMessageViewLineNum;
 }
 
 @synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize messagesTableView, sendButton, messagesInputBoxTextView, messageBarView, eventIconButton;
+@synthesize messagesTableView, sendButton, messagesInputBoxTextView, messageBarView;
 @synthesize messageBarBackground, messagesInputBoxBackground;
-@synthesize eventDetailsHeader, eventNameLabel, deleteEventButton;
+@synthesize boardMessageView, boardMessageBackground, boardMessageTextView;
 @synthesize group = _group;
 
-
 #pragma mark - Message Bar
-
--(void)hideKeyboard {
-    [self.messagesInputBoxTextView.internalTextView resignFirstResponder];
-}
 
 -(void)createMessageBarView {
     // Message input text box
@@ -65,9 +60,8 @@
     [self.sendButton setBackgroundImage:sendBtnBackground forState:UIControlStateNormal];
     [self.sendButton setBackgroundImage:selectedSendBtnBackground forState:UIControlStateSelected];
     
+    // Message bar view
     self.messageBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    
-    // TODO - event icon button
     
     // Tap to remove keyboard gesture
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
@@ -101,22 +95,14 @@
     }
 }
 
--(void) keyboardWillShow:(NSNotification *)note{
-    if (self.group.hasEvent) {
-        //TODO clean up - event detail header
-        CGRect r = self.eventDetailsHeader.frame;
-        r.origin.y = -r.size.height;
-        self.eventDetailsHeader.frame = r;
-        
-        CGRect table = self.messagesTableView.frame;
-        table.origin.y = 0;
-        CGRect containerFrame = self.messageBarView.frame;
-        table.size.height = self.view.bounds.size.height - containerFrame.size.height;
-        self.messagesTableView.frame = table;
-    }
-    
-    
-    
+#pragma mark - Keyboard
+
+-(void)hideKeyboard {
+    [self.messagesInputBoxTextView.internalTextView resignFirstResponder];
+    [self.boardMessageTextView resignFirstResponder];
+}
+
+-(void) keyboardWillShow:(NSNotification *)note{    
     // get keyboard size and loctaion
 	CGRect keyboardBounds;
     [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &keyboardBounds];
@@ -171,96 +157,11 @@
 	// set views with new info
 	self.messageBarView.frame = containerFrame;
     self.messagesTableView.frame = tableFrame;
-    
-    
-    if (self.group.hasEvent) {
-    //TODO clean up - event detail header
-    CGRect r = self.eventDetailsHeader.frame;
-    r.origin.y = 0;
-    self.eventDetailsHeader.frame = r;
-    CGRect table = self.messagesTableView.frame;
-    table.origin.y = r.size.height;
-    table.size.height -= r.size.height;
-    self.messagesTableView.frame = table;
-    }
-    
 	
 	// commit animations
 	[UIView commitAnimations];
         
     [self scrollToBottomAnimated:YES];
-}
-
-- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
-{
-    // Change message bar height
-    float diff = (growingTextView.frame.size.height - height);
-    
-	CGRect r = self.messageBarView.frame;
-    r.size.height -= diff;
-    r.origin.y += diff;
-	self.messageBarView.frame = r;
-    
-    // Change table view height
-    CGRect tbr = self.messagesTableView.frame;
-    tbr.size.height += diff;
-	self.messagesTableView.frame = tbr;
-    
-    [self scrollToBottomAnimated:YES];
-}
-
-- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView {
-    if (growingTextView.text.length > 0) {
-        [self enableSendButton];
-    } else {
-        [self disableSendButton];
-    }
-}
-
--(IBAction)switchEventIcon {
-    if (_messageIsForEvent == 0) {
-        UIImage *calendarColorIcon = [UIImage imageNamed:@"CalendarColorIcon.png"];
-        [self.eventIconButton setBackgroundImage:calendarColorIcon forState:UIControlStateNormal];
-        [self.eventIconButton setBackgroundImage:calendarColorIcon forState:UIControlStateSelected];
-        
-        _messageIsForEvent = 1;
-    } else {
-        UIImage *calendarGreyIcon = [UIImage imageNamed:@"CalendarGreyIcon.png"];
-        [self.eventIconButton setBackgroundImage:calendarGreyIcon forState:UIControlStateNormal];
-        [self.eventIconButton setBackgroundImage:calendarGreyIcon forState:UIControlStateSelected];
-        
-        _messageIsForEvent = 0;
-    }
-}
-
-#pragma mark - Event details Header
-
--(void)createEventDetailsHeader {
-    // TODO - clean this code up
-    
-    if (self.group.hasEvent) {
-        CGRect r = self.eventDetailsHeader.frame;
-        r.origin.y = 0;
-        self.eventDetailsHeader.frame = r;
-        
-        CGRect table = self.messagesTableView.frame;
-        table.origin.y = r.size.height;
-        table.size.height -= r.size.height;
-        self.messagesTableView.frame = table;
-        
-        self.eventNameLabel.text = self.group.eventName;
-        
-    } else {
-        CGRect r = self.eventDetailsHeader.frame;
-        r.origin.y = -r.size.height;
-        self.eventDetailsHeader.frame = r;
-        
-        CGRect table = self.messagesTableView.frame;
-        table.origin.y = 0;
-        CGRect containerFrame = self.messageBarView.frame;
-        table.size.height = self.view.bounds.size.height - containerFrame.size.height;
-        self.messagesTableView.frame = table;
-    }
 }
 
 #pragma mark - Server Calls
@@ -299,11 +200,11 @@
             [[NSManagedObjectContext MR_defaultContext] MR_save];
             
             //[self.messagesTableView reloadData];
-                        
+            
             self.messagesInputBoxTextView.text = @"";
             
             [self scrollToBottomAnimated:YES];
-
+            
             
             // TODO - event. Abstract code
         } else {
@@ -313,7 +214,7 @@
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
         NSLog(@"Error: %@", error);
         [[WebService sharedWebService] showAlertWithErrorCode:[error code]];        
     }];
@@ -343,13 +244,13 @@
             
             [Message updateOrCreateOrDeleteMessagesFromArray:[JSON valueForKeyPath:@"objects"] forGroup:self.group];
             [[NSManagedObjectContext MR_defaultContext] MR_save];
-                                    
+            
             _pauseTrackingChanges = NO;
             
             [self.messagesTableView reloadData];
-                                    
+            
             [self scrollToBottomAnimated:NO];
-                        
+            
         } else {
             // Otherwise, alert error
             [[WebService sharedWebService] showAlertWithErrorCode:code];
@@ -359,25 +260,26 @@
         NSLog(@"Error: %@", error);
         [[WebService sharedWebService] showAlertWithErrorCode:[error code]];        
     }];
-
+    
 }
 
--(IBAction)deleteEvent {
-    NSString *functionName = [NSString stringWithFormat:@"api/group/%@/event/", self.group.id];
+-(void)updateBoardMessage {
+    NSString *functionName = [NSString stringWithFormat:@"api/group/%@/", self.group.id];
     
-    NSLog(@"Calling DELETE %@", functionName);
+    NSDictionary *boardMessageData = [NSDictionary dictionaryWithObjectsAndKeys:self.group.boardMessage, @"boardMessage", nil];
     
-    [[WebService sharedWebService] deletePath:functionName parameters:nil success:^(AFHTTPRequestOperation *operation, id JSON) {
-        NSLog(@"DELETE %@ - return: %@", functionName, JSON);
+    NSLog(@"Calling PUT %@, param %@", functionName, boardMessageData);
+    
+    [[WebService sharedWebService] putPath:functionName parameters:boardMessageData success:^(AFHTTPRequestOperation *operation, id JSON) {
+        NSLog(@"PUT %@ - return: %@", functionName, JSON);
         
         NSString *jsonCode = [JSON valueForKeyPath:@"code"];
         int code = [jsonCode intValue];
-                
+        
         // If good, next
         if (code == 0) {
             [[NSManagedObjectContext MR_defaultContext] MR_save];
-            [self createEventDetailsHeader];
-                        
+            
         } else {
             // Otherwise, alert error
             [[WebService sharedWebService] showAlertWithErrorCode:code];
@@ -387,6 +289,159 @@
         NSLog(@"Error: %@", error);
         [[WebService sharedWebService] showAlertWithErrorCode:[error code]];        
     }];
+}
+
+#pragma mark - Board message textview delegates
+
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    if (!self.group.boardMessage || [self.group.boardMessage isEqualToString:@""]) {
+        self.boardMessageTextView.text = @"";
+    }
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    if (![self.group.boardMessage isEqualToString:self.boardMessageTextView.text]) {
+        self.group.boardMessage = self.boardMessageTextView.text;
+        [self updateBoardMessage];
+    }
+    
+    if ([self.boardMessageTextView.text isEqualToString:@""]) {
+        self.boardMessageTextView.text = @"(no board message. tap to set a topic)";
+    }
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    CGRect textViewFrame = self.boardMessageTextView.frame;
+    textViewFrame.size.height = self.boardMessageTextView.contentSize.height;
+    
+    CGRect backgroundFrame = self.boardMessageBackground.frame;
+    
+    CGRect tableFrame = self.messagesTableView.frame;
+    
+    // this is pretty bad code... oh well
+    if (textViewFrame.size.height > 50 && _boardMessageViewLineNum == 1) {
+        textViewFrame.size.height = 50;
+        backgroundFrame.size.height = 70;
+        tableFrame.origin.y = 66;
+        tableFrame.size.height = tableFrame.size.height - 20;
+        _boardMessageViewLineNum = 2;
+        
+    } else if (textViewFrame.size.height < 49 && _boardMessageViewLineNum == 2) {
+        textViewFrame.size.height = 30;
+        backgroundFrame.size.height = 50;
+        tableFrame.origin.y = 46;
+        tableFrame.size.height = tableFrame.size.height + 20;
+        _boardMessageViewLineNum = 1;
+    }
+    
+    [UIView beginAnimations:@"" context:nil];
+    [UIView setAnimationDuration:0.1f];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    
+    self.boardMessageTextView.frame = textViewFrame;
+    self.boardMessageBackground.frame = backgroundFrame;
+    self.messagesTableView.frame = tableFrame;
+    
+    [UIView commitAnimations];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text 
+{
+    // dismiss keyboard if pressed enter
+    if([text isEqualToString:@"\n"]) {
+        [self.boardMessageTextView resignFirstResponder];
+        return NO;
+    }
+    
+    // weird bug with 1px backspace
+    if(![self.boardMessageTextView hasText] && [text isEqualToString:@""]) return NO;
+    
+    NSUInteger newLength = [textView.text length] + [text length] - range.length;
+    if (newLength > 90) return NO;
+    
+    UIFont *font = [self.boardMessageTextView font];
+    CGSize size = [self.boardMessageTextView.text sizeWithFont:font 
+                                             constrainedToSize:self.boardMessageTextView.frame.size 
+                                                 lineBreakMode:UILineBreakModeWordWrap]; // default mode
+    float numberOfLines = size.height / font.lineHeight;   
+    
+    if (numberOfLines > 1) {
+        NSString* newText = [self.boardMessageTextView.text stringByReplacingCharactersInRange:range withString:text];
+        
+        // pretend there's more vertical space to get that extra line to check on
+        CGSize tallerSize = CGSizeMake(self.boardMessageTextView.frame.size.width-15, self.boardMessageTextView.frame.size.height * 2); 
+        
+        CGSize newSize = [newText sizeWithFont:self.boardMessageTextView.font constrainedToSize:tallerSize lineBreakMode:UILineBreakModeWordWrap];
+        
+        if (newSize.height > self.boardMessageTextView.frame.size.height) return NO;
+    }
+    
+    return YES;
+}
+
+#pragma mark - Message bar textview delegates
+
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+    // Change message bar height
+    float diff = (growingTextView.frame.size.height - height);
+    
+	CGRect r = self.messageBarView.frame;
+    r.size.height -= diff;
+    r.origin.y += diff;
+	self.messageBarView.frame = r;
+    
+    // Change table view height
+    CGRect tbr = self.messagesTableView.frame;
+    tbr.size.height += diff;
+	self.messagesTableView.frame = tbr;
+    
+    [self scrollToBottomAnimated:YES];
+}
+
+- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView {
+    if (growingTextView.text.length > 0) {
+        [self enableSendButton];
+    } else {
+        [self disableSendButton];
+    }
+}
+
+#pragma mark - Board message
+
+-(void)createBoardMessageView {
+    UIEdgeInsets insets = self.boardMessageTextView.contentInset;
+    insets.bottom = 0;
+    self.boardMessageTextView.contentInset = insets;
+        
+    self.boardMessageTextView.text = self.group.boardMessage;
+    if (!self.group.boardMessage || [self.group.boardMessage isEqualToString:@""]) {
+        self.boardMessageTextView.text = @"(no board message. tap to set a topic)";
+    }
+    
+    UIFont *font = [self.boardMessageTextView font];
+    CGSize size = [self.boardMessageTextView.text sizeWithFont:font 
+                                             constrainedToSize:self.boardMessageTextView.frame.size 
+                                                 lineBreakMode:UILineBreakModeWordWrap]; // default mode
+    float numberOfLines = size.height / font.lineHeight;   
+    _boardMessageViewLineNum = (int)numberOfLines;
+    
+    if (_boardMessageViewLineNum > 1) {
+        CGRect textViewFrame = self.boardMessageTextView.frame;
+        textViewFrame.size.height = self.boardMessageTextView.contentSize.height;
+        
+        CGRect backgroundFrame = self.boardMessageBackground.frame;
+        
+        CGRect tableFrame = self.messagesTableView.frame;
+
+        textViewFrame.size.height = 50;
+        backgroundFrame.size.height = 70;
+        tableFrame.origin.y = 66;
+        tableFrame.size.height = tableFrame.size.height - 20;
+
+    }
 }
 
 #pragma mark - View Lifecycle
@@ -396,7 +451,6 @@
     [super viewDidLoad];
     
     self.title = self.group.name;
-    [self createMessageBarView];
             
     // Listen for keyboard.
     [[NSNotificationCenter defaultCenter] addObserver:self 
@@ -409,15 +463,8 @@
                                                object:nil]; 
     
     [self resetSendButton];
-    
-    _messageIsForEvent = 0;
-    
-    [self createEventDetailsHeader];
-    
-    if (self.group.hasEvent) [self switchEventIcon];
-    
-    //TODO - figure out how event details header gets displayed
-    
+        
+
     _messageFetcher = [NSTimer scheduledTimerWithTimeInterval:7.0
                                      target:self
                                    selector:@selector(fetchMessagesFromServer)
@@ -439,6 +486,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self createMessageBarView];
+    [self createBoardMessageView];
     [self scrollToBottomAnimated:NO];
 }
 

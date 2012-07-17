@@ -32,9 +32,9 @@
 - (void)addUsersToGroup:(NSArray *)importUsers {
     NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];    
     
-    for (NSDictionary *user in importUsers) {
+    for (NSDictionary *userData in importUsers) {
         // Find or create planamo user
-        PlanamoUser *user = [PlanamoUser MR_importFromObject:user inContext:localContext];
+        PlanamoUser *user = [PlanamoUser MR_importFromObject:userData inContext:localContext];
         
         // Add user to group
         [user addGroupsObject:self];

@@ -16,10 +16,7 @@
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSDate * lastUpdated;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * hasEvent;
-@property (nonatomic, retain) NSString * eventName;
-@property (nonatomic, retain) NSString * eventLocation;
-@property (nonatomic, retain) NSDate * eventStartDatetime;
+@property (nonatomic, retain) NSString * boardMessage;
 @property (nonatomic, retain) NSSet *users;
 @property (nonatomic, retain) NSSet *messages;
 @end

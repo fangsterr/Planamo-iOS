@@ -105,7 +105,7 @@
             
             [MagicalRecord saveInBackgroundWithBlock:^(NSManagedObjectContext *localContext){
                 [NSManagedObjectContext MR_setContextForBackgroundThread:localContext];
-                
+            
                 // Scan address book
                 [AddressBookScanner scanAddressBook];
             
